@@ -178,25 +178,6 @@ When exporting songs from NoteBlockStudio to use with WorldRadio:
 
 ---
 
-## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/blockbench_file.svg" width="20" height="20" align="center" /> Blockbench & 3D Model Setup
-
-If you are customizing or modifying the 3D Boombox model in **Blockbench** with the **Animated Java** plugin:
-
-### 1. Texture Placement
-In the resource pack, texture files must be placed in:
-```
-worldradio resourcepack/assets/aj/textures/blueprint/worldradio_boombox/boombox_base.png
-```
-*(Placing textures in `models/` instead of `textures/` will result in purple/black checkerboards in Minecraft).*
-
-### 2. Centering the Text Display Screen
-- In Blockbench, locate the `text_display` bone.
-- Set the horizontal pivot of the bone to the exact horizontal center ($X = 0$).
-- Set the text alignment property to **Center**.
-- Animated Java will automatically compute and bake all 21 keyframe matrices centered over the boombox screen upon export.
-
----
-
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/powershell_file.svg" width="20" height="20" align="center" /> Command-Line Alternative (PowerShell)
 
 If you prefer using the command line instead of the GUI program, PowerShell scripts are included:
