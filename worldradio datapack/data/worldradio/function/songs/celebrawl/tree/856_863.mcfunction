@@ -1,0 +1,2 @@
+execute as @s[scores={nbs_Celebrawl=68480..68960}] run function worldradio:songs/celebrawl/tree/856_859
+execute as @s[scores={nbs_Celebrawl=68800..69360}] run function worldradio:songs/celebrawl/tree/860_863

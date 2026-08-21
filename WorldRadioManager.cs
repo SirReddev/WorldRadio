@@ -15,7 +15,10 @@ namespace WorldRadioManager
         public int Index { get; set; }
         public string FolderName { get; set; }
         public string DisplayTitle { get; set; }
-        public string ScoreboardObj { get; set; }
+        public string BaseObj { get; set; }
+        public string TickObj { get; set; }
+        public string TagName { get; set; }
+        public string RootTree { get; set; }
         public int MaxTick { get; set; }
     }
 
@@ -59,7 +62,6 @@ namespace WorldRadioManager
             this.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
             this.Icon = SystemIcons.Application;
 
-            // Main Layout Table
             TableLayoutPanel mainLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -344,7 +346,6 @@ namespace WorldRadioManager
                 {
                     txtSongSource.Text = ofd.FileName;
                     string nameNoExt = Path.GetFileNameWithoutExtension(ofd.FileName);
-                    // Format default title (e.g. steam_gardens -> Steam Gardens)
                     string formatted = Regex.Replace(nameNoExt.Replace('_', ' '), @"\b[a-z]", m => m.Value.ToUpper());
                     txtSongTitle.Text = formatted;
                 }
@@ -366,7 +367,7 @@ namespace WorldRadioManager
                 item.SubItems.Add(song.DisplayTitle);
                 item.SubItems.Add(song.FolderName);
                 item.SubItems.Add(durationStr);
-                item.SubItems.Add(song.ScoreboardObj);
+                item.SubItems.Add(song.TickObj);
                 item.Tag = song;
                 lstSongs.Items.Add(item);
             }
@@ -382,72 +383,90 @@ namespace WorldRadioManager
             string songsDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs");
             if (!Directory.Exists(songsDir)) return list;
 
-            string announceFile = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "songs", "announce_song.mcfunction");
-            Dictionary<int, string> titleMap = new Dictionary<int, string>();
-
-            if (File.Exists(announceFile))
+            var dirs = Directory.GetDirectories(songsDir);
+            int idx = 1;
+            foreach (var dir in dirs.OrderBy(d => Path.GetFileName(d)))
             {
-                string[] lines = File.ReadAllLines(announceFile);
-                foreach (string line in lines)
+                string folder = Path.GetFileName(dir);
+                if (folder.Equals("TEMPLATE", StringComparison.OrdinalIgnoreCase)) continue;
+
+                string title = null;
+                string titleFile = Path.Combine(dir, "title.txt");
+                if (File.Exists(titleFile))
                 {
-                    Match m = Regex.Match(line, @"matches\s+(\d+)\s+run\s+title\s+@a\s+actionbar\s+\[.*?Now Playing:\s*\\*""?(.*?)\\*""?\]", RegexOptions.IgnoreCase);
-                    if (!m.Success)
-                    {
-                        m = Regex.Match(line, @"matches\s+(\d+)\s+run\s+title\s+@a\s+actionbar\s+.*?""text"":""([^""]+)""", RegexOptions.IgnoreCase);
-                    }
-                    if (m.Success)
-                    {
-                        int idx = int.Parse(m.Groups[1].Value);
-                        string t = m.Groups[2].Value.Replace("Now Playing: ", "").Trim();
-                        titleMap[idx] = t;
-                    }
+                    title = File.ReadAllText(titleFile).Trim();
                 }
+
+                if (string.IsNullOrEmpty(title))
+                {
+                    title = Regex.Replace(folder.Replace('_', ' '), @"\b[a-z]", m => m.Value.ToUpper());
+                }
+
+                string baseObj, tickObj, tag, rootTree;
+                DetectSongDetails(folder, out baseObj, out tickObj, out tag, out rootTree);
+                int maxT = DetectMaxTick(folder);
+
+                list.Add(new SongInfo
+                {
+                    Index = idx,
+                    FolderName = folder,
+                    DisplayTitle = title,
+                    BaseObj = baseObj,
+                    TickObj = tickObj,
+                    TagName = tag,
+                    RootTree = rootTree,
+                    MaxTick = maxT
+                });
+                idx++;
             }
 
-            string playSongFile = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "songs", "play_song.mcfunction");
-            if (File.Exists(playSongFile))
-            {
-                string[] lines = File.ReadAllLines(playSongFile);
-                foreach (string line in lines)
-                {
-                    Match m = Regex.Match(line, @"matches\s+(\d+)\s+run\s+function\s+worldradio:radio/songs/([^/\s]+)/play");
-                    if (m.Success)
-                    {
-                        int idx = int.Parse(m.Groups[1].Value);
-                        string folder = m.Groups[2].Value;
-
-                        string display = titleMap.ContainsKey(idx) ? titleMap[idx] : folder;
-
-                        // Detect objective and max tick
-                        string obj = DetectObjective(folder);
-                        int maxT = DetectMaxTick(folder);
-
-                        list.Add(new SongInfo
-                        {
-                            Index = idx,
-                            FolderName = folder,
-                            DisplayTitle = display,
-                            ScoreboardObj = obj,
-                            MaxTick = maxT
-                        });
-                    }
-                }
-            }
-
-            // Sort by index
-            return list.OrderBy(s => s.Index).ToList();
+            return list;
         }
 
-        private string DetectObjective(string folderName)
+        private void DetectSongDetails(string folderName, out string baseObj, out string tickObj, out string tag, out string rootTree)
         {
-            string loadFile = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs", folderName, "load.mcfunction");
+            baseObj = "nbs_" + folderName;
+            tickObj = "nbs_" + folderName + "_t";
+            tag = "nbs_" + folderName;
+            rootTree = "0_2047";
+
+            string songDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs", folderName);
+            string loadFile = Path.Combine(songDir, "load.mcfunction");
             if (File.Exists(loadFile))
             {
-                string content = File.ReadAllText(loadFile);
-                Match m = Regex.Match(content, @"scoreboard\s+objectives\s+add\s+(\S+)\s+dummy");
-                if (m.Success) return m.Groups[1].Value;
+                string loadText = File.ReadAllText(loadFile);
+                var matches = Regex.Matches(loadText, @"scoreboard\s+objectives\s+add\s+(\S+)\s+dummy");
+                if (matches.Count >= 2)
+                {
+                    baseObj = matches[0].Groups[1].Value;
+                    tickObj = matches[1].Groups[1].Value;
+                }
+                else if (matches.Count == 1)
+                {
+                    baseObj = matches[0].Groups[1].Value;
+                    tickObj = baseObj + "_t";
+                }
             }
-            return "nbs_" + folderName + "_t";
+
+            string playFile = Path.Combine(songDir, "play.mcfunction");
+            if (File.Exists(playFile))
+            {
+                string playText = File.ReadAllText(playFile);
+                Match m = Regex.Match(playText, @"tag\s+@s\s+add\s+(\S+)");
+                if (m.Success) tag = m.Groups[1].Value;
+            }
+            else
+            {
+                tag = baseObj;
+            }
+
+            string tickFile = Path.Combine(songDir, "tick.mcfunction");
+            if (File.Exists(tickFile))
+            {
+                string tickText = File.ReadAllText(tickFile);
+                Match m = Regex.Match(tickText, @"tree/(\S+)");
+                if (m.Success) rootTree = m.Groups[1].Value;
+            }
         }
 
         private int DetectMaxTick(string folderName)
@@ -507,7 +526,6 @@ namespace WorldRadioManager
                     CopyDirectory(source, tempDir);
                 }
 
-                // Find song folder containing load.mcfunction and notes/
                 string foundSongDir = null;
                 string songFolderName = null;
 
@@ -528,85 +546,91 @@ namespace WorldRadioManager
                     return;
                 }
 
-                // Destination in datapack
                 string destDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs", songFolderName);
                 if (Directory.Exists(destDir)) Directory.Delete(destDir, true);
                 CopyDirectory(foundSongDir, destDir);
                 Directory.Delete(tempDir, true);
 
+                File.WriteAllText(Path.Combine(destDir, "title.txt"), title);
                 Log("Copied song files to: data/worldradio/function/songs/" + songFolderName);
 
-                // Sanitize notes (lowercase sound IDs and fix minecraft:Fizz)
-                string notesDir = Path.Combine(destDir, "notes");
-                if (Directory.Exists(notesDir))
+                // Sanitize all .mcfunction files in the song directory recursively
+                int sanitizedCount = 0;
+                foreach (string file in Directory.GetFiles(destDir, "*.mcfunction", SearchOption.AllDirectories))
                 {
-                    int sanitizedCount = 0;
-                    foreach (string file in Directory.GetFiles(notesDir, "*.mcfunction"))
+                    string content = File.ReadAllText(file);
+                    bool changed = false;
+                    if (content.Contains("minecraft:Fizz"))
                     {
-                        string content = File.ReadAllText(file);
-                        if (Regex.IsMatch(content, @"minecraft:[^ ]*[A-Z]"))
+                        content = content.Replace("minecraft:Fizz", "minecraft:block.fire.extinguish");
+                        changed = true;
+                    }
+                    if (Regex.IsMatch(content, @"playsound\s+minecraft:(\S+)", RegexOptions.IgnoreCase))
+                    {
+                        string newC = Regex.Replace(content, @"playsound\s+minecraft:(\S+)", m => "playsound minecraft:" + m.Groups[1].Value.ToLower(), RegexOptions.IgnoreCase);
+                        if (newC != content)
                         {
-                            content = content.Replace("minecraft:Fizz", "minecraft:block.fire.extinguish");
-                            content = Regex.Replace(content, @"playsound\s+minecraft:(\S+)", m => "playsound minecraft:" + m.Groups[1].Value.ToLower());
-                            File.WriteAllText(file, content);
-                            sanitizedCount++;
+                            content = newC;
+                            changed = true;
                         }
                     }
-                    if (sanitizedCount > 0)
+                    if (changed)
                     {
-                        Log(string.Format("Sanitized {0} note file(s) with invalid uppercase sound IDs.", sanitizedCount));
+                        File.WriteAllText(file, content);
+                        sanitizedCount++;
                     }
                 }
+                if (sanitizedCount > 0)
+                {
+                    Log(string.Format("Sanitized {0} function file(s) with invalid playsounds.", sanitizedCount));
+                }
 
-                // Get scoreboard objective & max tick
-                string obj = DetectObjective(songFolderName);
-                int maxTick = DetectMaxTick(songFolderName);
+                // Detect details
+                string baseObj, tickObj, tag, rootTree;
+                DetectSongDetails(songFolderName, out baseObj, out tickObj, out tag, out rootTree);
 
                 // Create connector functions
                 string radioSongDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "songs", songFolderName);
                 if (!Directory.Exists(radioSongDir)) Directory.CreateDirectory(radioSongDir);
 
-                // play.mcfunction
+                // 1. play.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "play.mcfunction"),
-                    string.Format("# Start playback for {0}\nscoreboard players set #song_id worldradio.data 0\nscoreboard players set #state worldradio.data 1\nscoreboard players reset @e {1}\nfunction worldradio:songs/{0}/load\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run function aj:worldradio_boombox/animations/playing/play\nfunction worldradio:radio/songs/{0}/resume\n", songFolderName, obj));
+                    string.Format("# Song: {0} - Play\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] add {1}\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {2} 0\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {3} -1\n\nscoreboard players set #radio {2} 0\nscoreboard players set #radio {3} -1\nscoreboard players set #radio_has_song worldradio.data 1\n",
+                    title, tag, baseObj, tickObj));
 
-                // pause.mcfunction
+                // 2. pause.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "pause.mcfunction"),
-                    string.Format("# Pause playback for {0}\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run function aj:worldradio_boombox/animations/playing/pause\n", songFolderName));
+                    string.Format("# Song: {0} - Pause\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] remove {1}\nscoreboard players set #radio_has_song worldradio.data 0\n",
+                    title, tag));
 
-                // resume.mcfunction
+                // 3. resume.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "resume.mcfunction"),
-                    string.Format("# Resume playback for {0}\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] at @s run function worldradio:songs/{0}/tree/branch_0\n", songFolderName));
+                    string.Format("# Song: {0} - Resume\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] add {1}\nscoreboard players set #radio_has_song worldradio.data 1\n",
+                    title, tag));
 
-                // stop.mcfunction
+                // 4. stop.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "stop.mcfunction"),
-                    string.Format("# Stop playback for {0}\nscoreboard players reset @e {1}\n", songFolderName, obj));
+                    string.Format("# Song: {0} - Stop\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] remove {1}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {2}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {3}\n\nscoreboard players reset #radio {2}\nscoreboard players reset #radio {3}\nscoreboard players set #radio_has_song worldradio.data 0\n",
+                    title, tag, baseObj, tickObj));
+
+                // 5. tick.mcfunction
+                File.WriteAllText(Path.Combine(radioSongDir, "tick.mcfunction"),
+                    string.Format("# Song: {0} - Tick\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1}] run scoreboard players operation @s {2} += speed {2}\nscoreboard players operation #radio {2} += speed {2}\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1}] at @s run function worldradio:songs/{3}/tree/{4}\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},limit=1] run scoreboard players operation #radio {3} = @s {3}\n\nexecute store result score #has_tag worldradio.data if entity @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},limit=1]\nexecute if score #has_tag worldradio.data matches 0 run scoreboard players set #radio_has_song worldradio.data 0\n",
+                    title, tag, baseObj, tickObj, rootTree));
+
+                // 6. seek.mcfunction
+                File.WriteAllText(Path.Combine(radioSongDir, "seek.mcfunction"),
+                    string.Format("# Song: {0} - Seek\nscoreboard players operation #seek_delta worldradio.data = #seek_ticks worldradio.data\nscoreboard players operation #seek_delta worldradio.data *= speed {1}\nscoreboard players operation #radio {1} += #seek_delta worldradio.data\n\nexecute if score #radio {1} matches ..-1 run scoreboard players set #radio {1} 0\nexecute if score #radio {1} matches 0 run scoreboard players set #radio {2} -1\n\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data = #radio {1}\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data /= speed {1}\nexecute if score #radio {1} matches 1.. run scoreboard players remove #temp worldradio.data 1\nexecute if score #radio {1} matches 1.. run scoreboard players operation #radio {2} = #temp worldradio.data\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s {1} = #radio {1}\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s {2} = #radio {2}\n",
+                    title, baseObj, tickObj));
+
+                // 7. update_display.mcfunction
+                File.WriteAllText(Path.Combine(radioSongDir, "update_display.mcfunction"),
+                    string.Format("# Song: {0} - Update Boombox Display\nexecute as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{0}\",color:\"dark_green\"}}]}}\n", title));
 
                 Log("Generated connector functions in: data/worldradio/function/radio/songs/" + songFolderName);
 
-                // Update or Add to Installed List
-                var existing = GetInstalledSongs();
-                var match = existing.FirstOrDefault(s => s.FolderName.Equals(songFolderName, StringComparison.OrdinalIgnoreCase));
-                if (match != null)
-                {
-                    match.DisplayTitle = title;
-                    match.ScoreboardObj = obj;
-                    match.MaxTick = maxTick;
-                }
-                else
-                {
-                    int nextIdx = existing.Count > 0 ? existing.Max(s => s.Index) + 1 : 1;
-                    existing.Add(new SongInfo
-                    {
-                        Index = nextIdx,
-                        FolderName = songFolderName,
-                        DisplayTitle = title,
-                        ScoreboardObj = obj,
-                        MaxTick = maxTick
-                    });
-                }
-
-                RebuildPlaylistDispatchers(existing);
+                var allSongs = GetInstalledSongs();
+                RebuildPlaylistDispatchers(allSongs);
                 RefreshSongList();
 
                 txtSongSource.Clear();
@@ -637,17 +661,13 @@ namespace WorldRadioManager
             {
                 Log("Removing song: " + song.DisplayTitle);
 
-                // Delete radio connector directory
                 string radioSongDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "songs", song.FolderName);
                 if (Directory.Exists(radioSongDir)) Directory.Delete(radioSongDir, true);
 
-                // Re-index remaining songs
-                var remaining = GetInstalledSongs().Where(s => !s.FolderName.Equals(song.FolderName, StringComparison.OrdinalIgnoreCase)).ToList();
-                for (int i = 0; i < remaining.Count; i++)
-                {
-                    remaining[i].Index = i + 1;
-                }
+                string mainSongDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs", song.FolderName);
+                if (Directory.Exists(mainSongDir)) Directory.Delete(mainSongDir, true);
 
+                var remaining = GetInstalledSongs();
                 RebuildPlaylistDispatchers(remaining);
                 RefreshSongList();
 
@@ -661,7 +681,7 @@ namespace WorldRadioManager
             }
         }
 
-        private void RebuildPlaylistDispatchers(List<SongInfo> songs)
+        public void RebuildPlaylistDispatchers(List<SongInfo> songs)
         {
             string radioSongsDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "songs");
             if (!Directory.Exists(radioSongsDir)) Directory.CreateDirectory(radioSongsDir);
@@ -670,7 +690,7 @@ namespace WorldRadioManager
             var playLines = new List<string> { "# WorldRadio - Global Play Song Dispatcher" };
             foreach (var s in songs)
             {
-                playLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} run function worldradio:radio/songs/{1}/play", s.Index, s.FolderName));
+                playLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/play", s.Index, s.FolderName));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "play_song.mcfunction"), playLines);
 
@@ -678,7 +698,7 @@ namespace WorldRadioManager
             var pauseLines = new List<string> { "# WorldRadio - Global Pause Song Dispatcher" };
             foreach (var s in songs)
             {
-                pauseLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} run function worldradio:radio/songs/{1}/pause", s.Index, s.FolderName));
+                pauseLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/pause", s.Index, s.FolderName));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "pause_song.mcfunction"), pauseLines);
 
@@ -686,7 +706,7 @@ namespace WorldRadioManager
             var resumeLines = new List<string> { "# WorldRadio - Global Resume Song Dispatcher" };
             foreach (var s in songs)
             {
-                resumeLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} run function worldradio:radio/songs/{1}/resume", s.Index, s.FolderName));
+                resumeLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/resume", s.Index, s.FolderName));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "resume_song.mcfunction"), resumeLines);
 
@@ -694,27 +714,52 @@ namespace WorldRadioManager
             var stopLines = new List<string> { "# WorldRadio - Global Stop Song Dispatcher" };
             foreach (var s in songs)
             {
-                stopLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} run function worldradio:radio/songs/{1}/stop", s.Index, s.FolderName));
+                stopLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/stop", s.Index, s.FolderName));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "stop_song.mcfunction"), stopLines);
 
-            // 5. check_finished.mcfunction
+            // 5. tick_song.mcfunction
+            var tickLines = new List<string> { "# WorldRadio - Global Tick Song Dispatcher" };
+            foreach (var s in songs)
+            {
+                tickLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/tick", s.Index, s.FolderName));
+            }
+            File.WriteAllLines(Path.Combine(radioSongsDir, "tick_song.mcfunction"), tickLines);
+
+            // 6. seek_song.mcfunction
+            var seekLines = new List<string> { "# WorldRadio - Global Seek Song Dispatcher" };
+            foreach (var s in songs)
+            {
+                seekLines.Add(string.Format("execute if score #song worldradio.data matches {0} run function worldradio:radio/songs/{1}/seek", s.Index, s.FolderName));
+            }
+            File.WriteAllLines(Path.Combine(radioSongsDir, "seek_song.mcfunction"), seekLines);
+
+            // 7. check_finished.mcfunction
             var finishLines = new List<string> { "# WorldRadio - Global Song Finish Check" };
             foreach (var s in songs)
             {
-                finishLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s {1} matches {2}.. run function worldradio:radio/internal/on_song_finished", s.Index, s.ScoreboardObj, s.MaxTick));
+                finishLines.Add(string.Format("execute if score #song worldradio.data matches {0} as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s {1} matches {2}.. run function worldradio:radio/internal/on_song_finished", s.Index, s.TickObj, s.MaxTick));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "check_finished.mcfunction"), finishLines);
 
-            // 6. announce_song.mcfunction
+            // 8. announce_song.mcfunction
             var announceLines = new List<string> { "# WorldRadio - Announce Song Actionbar" };
             foreach (var s in songs)
             {
-                announceLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} run title @a actionbar [\"\",{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"aqua\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+                announceLines.Add(string.Format("execute if score #song worldradio.data matches {0} run title @a actionbar [\"\",{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"aqua\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+                announceLines.Add(string.Format("execute if score #song worldradio.data matches {0} run tellraw @a [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "announce_song.mcfunction"), announceLines);
 
-            // 7. load_songs.mcfunction
+            // 9. update_display.mcfunction
+            var displayLines = new List<string> { "# WorldRadio - Update Boombox Text Display" };
+            foreach (var s in songs)
+            {
+                displayLines.Add(string.Format("execute if score #song worldradio.data matches {0} as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{1}\",color:\"dark_green\"}}]}}", s.Index, s.DisplayTitle));
+            }
+            File.WriteAllLines(Path.Combine(radioSongsDir, "update_display.mcfunction"), displayLines);
+
+            // 10. load_songs.mcfunction
             var loadLines = new List<string> { "# WorldRadio - Load All Song Objectives" };
             foreach (var s in songs)
             {
@@ -722,15 +767,20 @@ namespace WorldRadioManager
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "load_songs.mcfunction"), loadLines);
 
-            // 8. set_display_text.mcfunction
-            var displayLines = new List<string> { "# WorldRadio - Update Boombox Text Display" };
+            // 11. registry.mcfunction
+            var regLines = new List<string>
+            {
+                "# WorldRadio - Song Registry",
+                string.Format("scoreboard players set #total_songs worldradio.data {0}", songs.Count),
+                ""
+            };
             foreach (var s in songs)
             {
-                displayLines.Add(string.Format("execute if score #current_song worldradio.data matches {0} as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value '{{\"text\":\"Now Playing:\\n{1}\",\"color\":\"white\",\"alignment\":\"center\"}}'", s.Index, s.DisplayTitle));
+                regLines.Add(string.Format("function worldradio:songs/{0}/load", s.FolderName));
             }
-            File.WriteAllLines(Path.Combine(radioSongsDir, "set_display_text.mcfunction"), displayLines);
+            File.WriteAllLines(Path.Combine(radioSongsDir, "registry.mcfunction"), regLines);
 
-            // 9. Update status.mcfunction
+            // 12. status.mcfunction
             var statusLines = new List<string>
             {
                 "# WorldRadio - Print Status Summary",
@@ -759,20 +809,10 @@ namespace WorldRadioManager
                 "execute if score #shuffle worldradio.data matches 1 run tellraw @a [{\"text\":\" Playlist Mode: \",\"color\":\"gray\"},{\"text\":\"Shuffle\",\"color\":\"gold\",\"bold\":true}]",
                 "",
                 "# Boombox counts",
-                "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"},\"color\":\"light_purple\",\"bold\":true}]",
+                "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"light_purple\",\"bold\":true}]",
                 "tellraw @a [{\"text\":\"=================================\",\"color\":\"dark_green\"},\"\\n\"]"
             });
             File.WriteAllLines(Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "status.mcfunction"), statusLines);
-
-            // 10. Update load.mcfunction total songs
-            string mainLoadFile = Path.Combine(datapackRoot, "data", "worldradio", "function", "load.mcfunction");
-            if (File.Exists(mainLoadFile))
-            {
-                string loadContent = File.ReadAllText(mainLoadFile);
-                loadContent = Regex.Replace(loadContent, @"scoreboard\s+players\s+set\s+#total_songs\s+worldradio\.data\s+\d+",
-                    string.Format("scoreboard players set #total_songs worldradio.data {0}", songs.Count));
-                File.WriteAllText(mainLoadFile, loadContent);
-            }
 
             Log(string.Format("Rebuilt all playlist dispatchers for {0} song(s).", songs.Count));
         }

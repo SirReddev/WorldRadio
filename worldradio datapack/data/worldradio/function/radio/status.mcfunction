@@ -8,6 +8,7 @@ tellraw @a ["\n",{"text":"======== ","color":"dark_green"},{"text":"WorldRadio S
 
 # Song info
 execute if score #song worldradio.data matches 1 run tellraw @a [{"text":" Current Song: ","color":"gray"},{"text":"Steam Gardens","color":"gold","bold":true},{"text":" (1/","color":"dark_gray"},{"score":{"name":"#total_songs","objective":"worldradio.data"},"color":"dark_gray"},{"text":")","color":"dark_gray"}]
+execute if score #song worldradio.data matches 2 run tellraw @a [{"text":" Current Song: ","color":"gray"},{"text":"Celebrawl","color":"gold","bold":true},{"text":" (2/","color":"dark_gray"},{"score":{"name":"#total_songs","objective":"worldradio.data"},"color":"dark_gray"},{"text":")","color":"dark_gray"}]
 
 # State info
 execute if score #state worldradio.data matches 0 run tellraw @a [{"text":" Playback State: ","color":"gray"},{"text":"STOPPED","color":"red","bold":true}]

@@ -1,2 +1,3 @@
-# WorldRadio - update_display Dispatcher
-execute if score #song worldradio.data matches 1 run function worldradio:radio/songs/steam_gardens/update_display
+# WorldRadio - Update Boombox Text Display
+execute if score #song worldradio.data matches 1 as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {text:"",extra:[{text:"Playing: ",color:"green"},{text:"Steam Gardens",color:"dark_green"}]}
+execute if score #song worldradio.data matches 2 as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {text:"",extra:[{text:"Playing: ",color:"green"},{text:"Celebrawl",color:"dark_green"}]}
