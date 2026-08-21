@@ -1,0 +1,190 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "WorldRadio Control Panel",
+    "color": "green",
+    "bold": true
+  },
+  "body": [
+    {
+      "type": "minecraft:plain_message",
+      "contents": {
+        "text": "Click any button to control radio playback:"
+      }
+    }
+  ],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "▶ Play / Resume",
+        "color": "green"
+      },
+      "tooltip": {
+        "text": "Start or resume song playback"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/play"
+      }
+    },
+    {
+      "label": {
+        "text": "⏸ Pause",
+        "color": "gold"
+      },
+      "tooltip": {
+        "text": "Pause playback"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/pause"
+      }
+    },
+    {
+      "label": {
+        "text": "⏹ Stop",
+        "color": "red"
+      },
+      "tooltip": {
+        "text": "Stop playback and reset to start"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/stop"
+      }
+    },
+    {
+      "label": {
+        "text": "⏭ Next Song",
+        "color": "aqua"
+      },
+      "tooltip": {
+        "text": "Play next song in playlist"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/next"
+      }
+    },
+    {
+      "label": {
+        "text": "⏮ Prev Song",
+        "color": "aqua"
+      },
+      "tooltip": {
+        "text": "Play previous song in playlist"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/previous"
+      }
+    },
+    {
+      "label": {
+        "text": "🔀 Shuffle Song",
+        "color": "gold"
+      },
+      "tooltip": {
+        "text": "Pick a random song"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "🔄 Toggle Mode",
+        "color": "light_purple"
+      },
+      "tooltip": {
+        "text": "Toggle sequential / random on finish"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/toggle_shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "⏩ Seek +5s",
+        "color": "gold"
+      },
+      "tooltip": {
+        "text": "Seek forward 5 seconds"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/seek_forward"
+      }
+    },
+    {
+      "label": {
+        "text": "⏪ Seek -5s",
+        "color": "gold"
+      },
+      "tooltip": {
+        "text": "Seek backward 5 seconds"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/seek_backward"
+      }
+    },
+    {
+      "label": {
+        "text": "📻 Summon Boombox",
+        "color": "green"
+      },
+      "tooltip": {
+        "text": "Summon boombox at your location"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:summon_boombox"
+      }
+    },
+    {
+      "label": {
+        "text": "🗑 Remove Nearest",
+        "color": "red"
+      },
+      "tooltip": {
+        "text": "Remove nearest boombox model"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:remove_boombox"
+      }
+    },
+    {
+      "label": {
+        "text": "ℹ Radio Status",
+        "color": "blue"
+      },
+      "tooltip": {
+        "text": "View current radio state and active boomboxes"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/status"
+      }
+    }
+  ]
+}

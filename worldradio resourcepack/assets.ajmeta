@@ -1,0 +1,18 @@
+{
+	"formatVersion": "1.0.0",
+	"rigs": {
+		"aj:worldradio_boombox": {
+			"coreFiles": ["assets/minecraft/atlases/blocks.json", "pack.mcmeta"],
+			"versionedFiles": [
+				"assets/aj/items/blueprint/worldradio_boombox/antenna.json",
+				"assets/aj/items/blueprint/worldradio_boombox/boombox.json",
+				"assets/aj/items/blueprint/worldradio_boombox/speaker_left.json",
+				"assets/aj/items/blueprint/worldradio_boombox/speaker_right.json",
+				"assets/aj/models/blueprint/worldradio_boombox/antenna.json",
+				"assets/aj/models/blueprint/worldradio_boombox/boombox.json",
+				"assets/aj/models/blueprint/worldradio_boombox/speaker_left.json",
+				"assets/aj/models/blueprint/worldradio_boombox/speaker_right.json"
+			]
+		}
+	}
+}

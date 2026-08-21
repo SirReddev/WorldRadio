@@ -1,0 +1,2 @@
+execute as @s[scores={nbs_steamgarde=195200..195680}] run function worldradio:songs/steam_gardens/tree/2440_2443
+execute as @s[scores={nbs_steamgarde=195520..196080}] run function worldradio:songs/steam_gardens/tree/2444_2447
