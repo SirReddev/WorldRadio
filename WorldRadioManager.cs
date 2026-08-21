@@ -292,6 +292,7 @@ namespace WorldRadioManager
                 current,
                 Path.Combine(current, "worldradio datapack"),
                 Path.Combine(current, "..", "worldradio datapack"),
+                @"C:\Users\devus\Desktop\World Radio\worldradio datapack",
                 @"C:\Users\devus\Desktop\test\worldradio datapack"
             };
 
