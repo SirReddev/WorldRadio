@@ -3,7 +3,7 @@ execute as @s[type=minecraft:player,tag=!WorldRadioDJ] run tellraw @s [{"text":"
 execute as @s[type=minecraft:player,tag=!WorldRadioDJ] run return 0
 
 # Pick a random song from 1..#total_songs
-execute store result score #rand worldradio.data run random value 0..2147483647
+execute store result score #rand worldradio.data run random value 0..2147483646
 scoreboard players operation #rand worldradio.data %= #total_songs worldradio.data
 scoreboard players add #rand worldradio.data 1
 
