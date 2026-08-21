@@ -743,11 +743,21 @@ namespace WorldRadioManager
             File.WriteAllLines(Path.Combine(radioSongsDir, "check_finished.mcfunction"), finishLines);
 
             // 8. announce_song.mcfunction
-            var announceLines = new List<string> { "# WorldRadio - Announce Song Actionbar" };
+            var announceLines = new List<string>
+            {
+                "# WorldRadio - Announce Song Actionbar & Chat",
+                "# Actionbar (0 = Both, 1 = Actionbar Only)"
+            };
             foreach (var s in songs)
             {
-                announceLines.Add(string.Format("execute if score #song worldradio.data matches {0} run title @a actionbar [\"\",{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"aqua\",\"bold\":true}}]", s.Index, s.DisplayTitle));
-                announceLines.Add(string.Format("execute if score #song worldradio.data matches {0} run tellraw @a [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+                announceLines.Add(string.Format("execute if score #announce_mode worldradio.data matches 0..1 if score #song worldradio.data matches {0} run title @a actionbar [\"\",{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"aqua\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+            }
+            announceLines.Add("");
+            announceLines.Add("# Chat Notification (0 = Both, 2 = Chat Only)");
+            foreach (var s in songs)
+            {
+                announceLines.Add(string.Format("execute if score #announce_mode worldradio.data matches 0 if score #song worldradio.data matches {0} run tellraw @a [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+                announceLines.Add(string.Format("execute if score #announce_mode worldradio.data matches 2 if score #song worldradio.data matches {0} run tellraw @a [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "announce_song.mcfunction"), announceLines);
 
@@ -807,6 +817,12 @@ namespace WorldRadioManager
                 "# Shuffle mode info",
                 "execute if score #shuffle worldradio.data matches 0 run tellraw @a [{\"text\":\" Playlist Mode: \",\"color\":\"gray\"},{\"text\":\"Sequential\",\"color\":\"aqua\",\"bold\":true}]",
                 "execute if score #shuffle worldradio.data matches 1 run tellraw @a [{\"text\":\" Playlist Mode: \",\"color\":\"gray\"},{\"text\":\"Shuffle\",\"color\":\"gold\",\"bold\":true}]",
+                "",
+                "# Notification mode info",
+                "execute if score #announce_mode worldradio.data matches 0 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Both (Actionbar & Chat)\",\"color\":\"aqua\",\"bold\":true}]",
+                "execute if score #announce_mode worldradio.data matches 1 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Actionbar Only\",\"color\":\"gold\",\"bold\":true}]",
+                "execute if score #announce_mode worldradio.data matches 2 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Chat Only\",\"color\":\"yellow\",\"bold\":true}]",
+                "execute if score #announce_mode worldradio.data matches 3 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"None (Silent)\",\"color\":\"red\",\"bold\":true}]",
                 "",
                 "# Boombox counts",
                 "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"light_purple\",\"bold\":true}]",

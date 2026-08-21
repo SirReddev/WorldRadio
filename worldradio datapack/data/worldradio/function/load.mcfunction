@@ -8,6 +8,7 @@ function worldradio:radio/songs/registry
 execute unless score #state worldradio.data matches 0..2 run scoreboard players set #state worldradio.data 0
 execute unless score #song worldradio.data matches 1.. run scoreboard players set #song worldradio.data 1
 execute unless score #shuffle worldradio.data matches 0..1 run scoreboard players set #shuffle worldradio.data 0
+execute unless score #announce_mode worldradio.data matches 0..3 run scoreboard players set #announce_mode worldradio.data 0
 
 # Set initial text on any existing boomboxes
 execute if score #state worldradio.data matches 1..2 run function worldradio:radio/songs/update_display

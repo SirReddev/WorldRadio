@@ -15,9 +15,15 @@ execute if score #state worldradio.data matches 0 run tellraw @a [{"text":" Play
 execute if score #state worldradio.data matches 1 run tellraw @a [{"text":" Playback State: ","color":"gray"},{"text":"PLAYING","color":"green","bold":true}]
 execute if score #state worldradio.data matches 2 run tellraw @a [{"text":" Playback State: ","color":"gray"},{"text":"PAUSED","color":"yellow","bold":true}]
 
-# Shuffle mode info
+# Playlist mode info
 execute if score #shuffle worldradio.data matches 0 run tellraw @a [{"text":" Playlist Mode: ","color":"gray"},{"text":"Sequential","color":"aqua","bold":true}]
 execute if score #shuffle worldradio.data matches 1 run tellraw @a [{"text":" Playlist Mode: ","color":"gray"},{"text":"Shuffle","color":"gold","bold":true}]
+
+# Notification mode info
+execute if score #announce_mode worldradio.data matches 0 run tellraw @a [{"text":" Notifications: ","color":"gray"},{"text":"Both (Actionbar & Chat)","color":"aqua","bold":true}]
+execute if score #announce_mode worldradio.data matches 1 run tellraw @a [{"text":" Notifications: ","color":"gray"},{"text":"Actionbar Only","color":"gold","bold":true}]
+execute if score #announce_mode worldradio.data matches 2 run tellraw @a [{"text":" Notifications: ","color":"gray"},{"text":"Chat Only","color":"yellow","bold":true}]
+execute if score #announce_mode worldradio.data matches 3 run tellraw @a [{"text":" Notifications: ","color":"gray"},{"text":"None (Silent)","color":"red","bold":true}]
 
 # Boombox counts
 tellraw @a [{"text":" Active Boomboxes: ","color":"gray"},{"score":{"name":"#boombox_count","objective":"worldradio.data"},"color":"light_purple","bold":true}]

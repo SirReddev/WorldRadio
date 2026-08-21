@@ -18,6 +18,7 @@
   - [Automated Background Processes](#automated-background-processes)
 - [DJ Permission System (WorldRadioDJ Tag)](#dj-permission-system-worldradiodj-tag)
 - [In-Game Controls & Commands Reference](#in-game-controls--commands-reference)
+  - [Song Notification Modes](#song-notification-modes)
 - [System Architecture & How It Works](#system-architecture--how-it-works)
 - [NoteBlockStudio Export Guidelines](#noteblockstudio-export-guidelines)
 - [Blockbench & 3D Model Setup](#blockbench--3d-model-setup)
@@ -120,10 +121,25 @@ All commands require the `WorldRadioDJ` tag to execute.
 | **Previous Song** | `/function worldradio:radio/previous` | Goes back to the previous song in sequential order |
 | **Shuffle Song** | `/function worldradio:radio/shuffle` | Picks a random song from the playlist (advances if same) |
 | **Toggle Auto-Play Mode** | `/function worldradio:radio/toggle_shuffle` | Toggles between Sequential and Shuffle mode when songs end |
+| **Toggle Notifications** | `/function worldradio:radio/toggle_announce` | Cycles song announcements: `Both` $\rightarrow$ `Actionbar` $\rightarrow$ `Chat` $\rightarrow$ `None` |
 | **Seek +5s** | `/function worldradio:radio/seek_forward` | Seeks forward 100 ticks (5 seconds) |
 | **Seek -5s** | `/function worldradio:radio/seek_backward` | Seeks backward 100 ticks (5 seconds) |
 | **Custom Seek** | `/function worldradio:radio/seek_by {ticks: 200}` | Seeks by any custom tick count (+forward / -backward) |
 | **Radio Status** | `/function worldradio:radio/status` | Displays radio state, current song title, mode, and boombox count |
+
+### Song Notification Modes
+
+Customize how song changes are announced to players when playback starts or switches:
+
+| Notification Mode | Description | Direct Command |
+|---|---|---|
+| **Both** *(Default)* | Shows `Now Playing: <Song>` on the player actionbar **and** sends a message to chat. | `/function worldradio:radio/set_announce_both` |
+| **Actionbar Only** | Displays `Now Playing: <Song>` on player actionbars with zero chat log clutter. | `/function worldradio:radio/set_announce_actionbar` |
+| **Chat Only** | Sends `[WorldRadio] Now Playing: <Song>` into the chat log without actionbar text. | `/function worldradio:radio/set_announce_chat` |
+| **None (Silent)** | Completely silent notifications (boomboxes still play music and show text on screen). | `/function worldradio:radio/set_announce_none` |
+
+> [!TIP]
+> You can quickly cycle through all 4 modes by clicking **`📢 Toggle Notifications`** in the Control Panel GUI (`/function worldradio:radio/help`) or by running `/function worldradio:radio/toggle_announce`.
 
 ---
 

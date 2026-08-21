@@ -104,7 +104,7 @@
     },
     {
       "label": {
-        "text": "🔄 Toggle Mode",
+        "text": "🔄 Mode: Next / Random",
         "color": "light_purple"
       },
       "tooltip": {
@@ -114,6 +114,20 @@
       "action": {
         "type": "run_command",
         "command": "/function worldradio:radio/toggle_shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "📢 Toggle Notifications",
+        "color": "light_purple"
+      },
+      "tooltip": {
+        "text": "Toggle song notifications: Both / Actionbar / Chat / None"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/toggle_announce"
       }
     },
     {
@@ -178,7 +192,7 @@
         "color": "blue"
       },
       "tooltip": {
-        "text": "View current radio state and active boomboxes"
+        "text": "View current radio state, active boomboxes & notifications"
       },
       "width": 150,
       "action": {
