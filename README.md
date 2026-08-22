@@ -105,6 +105,12 @@ To keep server environments, multiplayer worlds, and events organized, **all Wor
 
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/mcfunction_file.svg" width="20" height="20" align="center" /> In-Game Controls & Commands Reference
 
+<div align="center">
+
+![WorldRadio Control Panel](assets/control_panel.png)
+
+</div>
+
 All commands require the `WorldRadioDJ` tag to execute.
 
 | Action | In-Game Command | Description |
@@ -221,16 +227,20 @@ If you prefer using the command line instead of the GUI program, PowerShell scri
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/data_folder.svg" width="20" height="20" align="center" /> Project File Structure
 
 ```
-test/
+World Radio/
+├── assets/                       # Documentation images & banner assets
+│   ├── title.png                 # Header banner
+│   └── control_panel.png         # Control panel GUI screenshot
 ├── WorldRadioManager.exe         # Standalone GUI Playlist & Song Manager
 ├── WorldRadioManager.cs          # C# Source code for WorldRadioManager
+├── README.md                     # Complete documentation & guide
+├── LICENSE                       # CC BY-NC 4.0 License
+├── add_song.ps1                  # CLI song importer script
+├── remove_song.ps1               # CLI song remover script
 │
-├── worldradio datapack/
+├── worldradio datapack/          # Pure Minecraft Datapack
 │   ├── pack.mcmeta               # Datapack metadata (by Reddev)
-│   ├── README.md                 # Complete documentation & guide
-│   ├── LICENSE                   # CC BY-NC 4.0 License
-│   ├── add_song.ps1              # CLI song importer script
-│   ├── remove_song.ps1           # CLI song remover script
+│   ├── data.ajmeta               # Animated Java metadata
 │   └── data/
 │       ├── aj/                   # Pure Animated Java exports (DO NOT EDIT)
 │       ├── animated_java/        # Pure Animated Java runtime (DO NOT EDIT)
@@ -242,15 +252,15 @@ test/
 │               ├── summon_boombox.mcfunction
 │               ├── remove_boombox.mcfunction
 │               ├── remove_all_boomboxes.mcfunction
-│               ├── chat_help.mcfunction
 │               ├── load.mcfunction
 │               ├── tick.mcfunction
 │               ├── radio/        # Playback controllers & playlist engine
 │               └── songs/        # NoteBlockStudio song notes & dispatchers
 │
-└── worldradio resourcepack/
+└── worldradio resourcepack/      # Pure Minecraft Resource Pack
     ├── pack.mcmeta               # Resource pack metadata (by Reddev)
     ├── pack.png                  # Resource pack icon
+    ├── assets.ajmeta             # Animated Java metadata
     └── assets/
         └── aj/
             ├── models/           # Exported boombox display models
