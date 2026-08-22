@@ -2,7 +2,7 @@
 
 ![WorldRadio](assets/title.png)
 
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.21%20%E2%80%93%201.21.6-36a7dd?style=for-the-badge&logo=minecraft&logoColor=white)](https://minecraft.wiki) [![Creator](https://img.shields.io/badge/Creator-Reddev-5865F2?style=for-the-badge)](https://reddev.dev) [![Website](https://img.shields.io/badge/Website-reddev.dev-2ea44f?style=for-the-badge)](https://reddev.dev) [![Manager GUI](https://img.shields.io/badge/Manager%20GUI-C%23%20%2F%20.NET-9b4993?style=for-the-badge&logo=dotnet&logoColor=white)](#worldradio-song-manager-program) [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-orange?style=for-the-badge)](#license)
+[![Minecraft](https://img.shields.io/badge/Minecraft-26.2%20-36a7dd?style=for-the-badge&logo=minecraft&logoColor=white)](https://minecraft.wiki) [![Creator](https://img.shields.io/badge/Creator-Reddev-5865F2?style=for-the-badge)](https://reddev.dev) [![Website](https://img.shields.io/badge/Website-reddev.dev-2ea44f?style=for-the-badge)](https://reddev.dev) [![Manager GUI](https://img.shields.io/badge/Manager%20GUI-C%23%20%2F%20.NET-9b4993?style=for-the-badge&logo=dotnet&logoColor=white)](#worldradio-song-manager-program) [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-orange?style=for-the-badge)](#license)
 
 **A synchronized, multi-speaker Minecraft radio network pairing custom Animated Java 3D boombox models with NoteBlockStudio music.**
 
