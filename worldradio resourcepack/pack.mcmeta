@@ -1,6 +1,8 @@
 {
-  "pack": {
-    "pack_format": 65,
-    "description": "WorldRadio Resources by Reddev"
-  }
+	"pack": {
+		"pack_format": 65,
+		"description": "WorldRadio Resources by Reddev",
+		"min_format": 84,
+		"max_format": 84
+	}
 }

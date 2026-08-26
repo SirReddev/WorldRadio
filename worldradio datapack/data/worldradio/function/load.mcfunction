@@ -4,6 +4,7 @@ scoreboard objectives add worldradio.jb_state dummy
 scoreboard objectives add worldradio.jb_song dummy
 scoreboard objectives add worldradio.jb_timer dummy
 scoreboard objectives add worldradio.jb_phase dummy
+scoreboard objectives add worldradio.jb_variant dummy
 
 # Register and load all songs
 function worldradio:radio/songs/registry

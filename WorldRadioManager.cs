@@ -901,11 +901,29 @@ namespace WorldRadioManager
             jbSyncLines.Add("$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run function aj:worldradio_boombox/animations/pause_all");
             jbSyncLines.Add("$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {text:\"......\",bold:true,color:\"white\"}");
 
+            var jbAnnounceLines = new List<string>
+            {
+                "# WorldRadio - Announce Jukebox Song Actionbar & Chat (Macro)",
+                "# Actionbar Notification (0 = Both, 1 = Actionbar Only)"
+            };
+            foreach (var s in songs)
+            {
+                jbAnnounceLines.Add(string.Format("$execute at @s if score #announce_mode worldradio.data matches 0..1 if score @s worldradio.jb_song matches {0} as @a[distance=..$(radius)] run title @s actionbar [\"\",{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"aqua\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+            }
+            jbAnnounceLines.Add("");
+            jbAnnounceLines.Add("# Chat Notification (0 = Both, 2 = Chat Only)");
+            foreach (var s in songs)
+            {
+                jbAnnounceLines.Add(string.Format("$execute at @s if score #announce_mode worldradio.data matches 0 if score @s worldradio.jb_song matches {0} as @a[distance=..$(radius)] run tellraw @s [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+                jbAnnounceLines.Add(string.Format("$execute at @s if score #announce_mode worldradio.data matches 2 if score @s worldradio.jb_song matches {0} as @a[distance=..$(radius)] run tellraw @s [{{\"text\":\"[WorldRadio] \",\"color\":\"green\",\"bold\":true}},{{\"text\":\"Now Playing: \",\"color\":\"gray\"}},{{\"text\":\"{1}\",\"color\":\"dark_green\",\"bold\":true}}]", s.Index, s.DisplayTitle));
+            }
+
             File.WriteAllLines(Path.Combine(jbLocalDir, "play_song.mcfunction"), jbPlayLines);
             File.WriteAllLines(Path.Combine(jbLocalDir, "stop_playback.mcfunction"), jbStopLines);
             File.WriteAllLines(Path.Combine(jbLocalDir, "tick_song.mcfunction"), jbTickLines);
             File.WriteAllLines(Path.Combine(jbLocalDir, "sync_boombox.mcfunction"), jbSyncLines);
             File.WriteAllLines(Path.Combine(jbLocalDir, "join_playing_mesh.mcfunction"), jbJoinMeshLines);
+            File.WriteAllLines(Path.Combine(jbLocalDir, "announce_song.mcfunction"), jbAnnounceLines);
 
             // 14. init_new_boombox.mcfunction & sync_new_boomboxes.mcfunction
             string radioInternalDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "internal");

@@ -16,6 +16,8 @@ execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run sc
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run scoreboard players set @s worldradio.jb_timer 0
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run scoreboard players set @s worldradio.jb_phase 0
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run scoreboard players set @s worldradio.jb_song 1
+execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run scoreboard players set @s worldradio.jb_variant 1
+execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] run function aj:worldradio_jukebox/variants/default/apply
 
 # Strip all state & song tags from jukeboxes & boomboxes
 tag @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] remove worldradio.state_play
