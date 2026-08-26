@@ -11,5 +11,5 @@ execute if score #radio nbs_steamgarde matches 1.. run scoreboard players operat
 execute if score #radio nbs_steamgarde matches 1.. run scoreboard players remove #temp worldradio.data 1
 execute if score #radio nbs_steamgarde matches 1.. run scoreboard players operation #radio nbs_steamgarde_t = #temp worldradio.data
 
-execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s nbs_steamgarde = #radio nbs_steamgarde
-execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s nbs_steamgarde_t = #radio nbs_steamgarde_t
+execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] run scoreboard players operation @s nbs_steamgarde = #radio nbs_steamgarde
+execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] run scoreboard players operation @s nbs_steamgarde_t = #radio nbs_steamgarde_t

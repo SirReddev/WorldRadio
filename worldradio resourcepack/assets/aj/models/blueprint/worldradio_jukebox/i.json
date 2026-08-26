@@ -1,0 +1,41 @@
+{
+	"textures": {
+		"1": "aj:blueprint/worldradio_boombox/worldradio_title",
+		"particle": "minecraft:item/pufferfish"
+	},
+	"display": {
+		"head": {
+			"rotation": [0, 180, 0]
+		}
+	},
+	"elements": [
+		{
+			"from": [0.065, 8.115, 7.54],
+			"to": [1.445, 10.875, 8.46],
+			"rotation": {
+				"x": 0,
+				"y": 0,
+				"z": 0,
+				"origin": [8, 8, 8]
+			},
+			"faces": {
+				"north": {
+					"uv": [5.472, 0.8, 5.856, 3.2],
+					"texture": "#1"
+				},
+				"south": {
+					"uv": [5.856, 0.8, 5.472, 3.2],
+					"texture": "#1"
+				},
+				"up": {
+					"uv": [5.856, 0.8, 5.472, 0],
+					"texture": "#1"
+				},
+				"down": {
+					"uv": [5.856, 4, 5.472, 3.2],
+					"texture": "#1"
+				}
+			}
+		}
+	]
+}

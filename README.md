@@ -4,7 +4,7 @@
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-26.2%20-36a7dd?style=for-the-badge&logo=minecraft&logoColor=white)](https://minecraft.wiki) [![Creator](https://img.shields.io/badge/Creator-Reddev-5865F2?style=for-the-badge)](https://reddev.dev) [![Website](https://img.shields.io/badge/Website-reddev.dev-2ea44f?style=for-the-badge)](https://reddev.dev) [![Manager GUI](https://img.shields.io/badge/Manager%20GUI-C%23%20%2F%20.NET-9b4993?style=for-the-badge&logo=dotnet&logoColor=white)](#worldradio-song-manager-program) [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-orange?style=for-the-badge)](#license)
 
-**A synchronized, multi-speaker Minecraft radio network pairing custom Animated Java 3D boombox models with NoteBlockStudio music.**
+**A synchronized, multi-speaker Minecraft radio network pairing custom Animated Java 3D boomboxes and interactive jukeboxes with NoteBlockStudio music.**
 
 </div>
 
@@ -18,11 +18,13 @@
   - [Automated Background Processes](#automated-background-processes)
 - [DJ Permission System (WorldRadioDJ Tag)](#dj-permission-system-worldradiodj-tag)
 - [In-Game Controls & Commands Reference](#in-game-controls--commands-reference)
+  - [Control Hub Dialog GUI](#control-hub-dialog-gui)
+  - [3D Boombox](#3d-boombox)
+  - [3D Jukebox](#3d-jukebox)
+  - [Dynamic Radius & Seamless Zone Handover](#dynamic-radius--seamless-zone-handover)
   - [Song Notification Modes](#song-notification-modes)
 - [System Architecture & How It Works](#system-architecture--how-it-works)
 - [NoteBlockStudio Export Guidelines](#noteblockstudio-export-guidelines)
-- [Blockbench & 3D Model Setup](#blockbench--3d-model-setup)
-- [Command-Line Alternative (PowerShell)](#command-line-alternative-powershell)
 - [Project File Structure](#project-file-structure)
 - [Troubleshooting & FAQ](#troubleshooting--faq)
 - [Credits & Licenses](#credits--licenses)
@@ -31,12 +33,13 @@
 
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/advancement_file.svg" width="20" height="20" align="center" /> Key Features
 
-- **Multi-Speaker Global Synchronization**: Summon as many boomboxes as you want across your world—all boombox models play music and display animations in 100% lockstep.
+- **Multi-Speaker Global Synchronization**: Summon as many boomboxes as you want across your world—all boomboxes play music and display animations in 100% lockstep.
+- **Interactive 3D Jukeboxes with Mesh Networking**: Full Animated Java console models with clickable 3D buttons, moving needle arms, and spinning vinyl records. Nearby jukeboxes connect automatically into a synchronized mesh network.
+- **Dynamic Radius & Seamless Zone Handover**: Jukeboxes broadcast local music to boomboxes in their zone. When boomboxes enter or exit a jukebox radius, they automatically hand over between Global Radio and local jukebox channels in real-time.
 - **Standalone GUI Song Manager**: Easily add, update, and remove songs using the included **`WorldRadioManager.exe`** desktop program (no coding or terminal commands required).
-- **In-Game Modal GUI Control Panel**: Features an interactive Minecraft Dialog GUI screen (`/function worldradio:radio/help`) with one-click control buttons.
+- **Interactive Minecraft Dialog GUI**: Features a clean Control Panel (`/function worldradio:radio/help`) with one-click buttons, track selector, radius slider, and full system reset.
 - **DJ Role & Permission Protection**: Server-safe control system requiring the `WorldRadioDJ` entity tag to prevent unauthorized players from stopping or skipping music.
-- **Live Screen & Actionbar Notifications**: Digital text display on every boombox model and player actionbar dynamically shows `Now Playing: <Song Title>`.
-- **100% Non-Destructive Modding**: Animated Java model folders (`data/aj/`) and NoteBlockStudio note folders are kept untouched, allowing seamless model re-exports from Blockbench anytime.
+- **Live Digital Screens**: High-contrast text displays on every boombox model dynamically show `Playing: <Song Title>`.
 
 ---
 
@@ -81,7 +84,7 @@ When you import a song, `WorldRadioManager.exe` performs all technical setup beh
 3. **Scoreboard Objective Detection**: Scans the song's `load.mcfunction` to identify its exact objective (`nbs_<name>_t`).
 4. **Length & Tick Calculation**: Analyzes all note tree branches to calculate the exact max tick duration for seamless auto-advance.
 5. **Connector Generation**: Creates custom `play.mcfunction`, `pause.mcfunction`, `resume.mcfunction`, and `stop.mcfunction` connectors for that song.
-6. **Global Dispatcher Rebuilding**: Rebuilds the global playback dispatcher, text display updater, actionbar announcer, and status summaries.
+6. **Global Dispatcher Rebuilding**: Rebuilds the global playback dispatcher, local zone mesh dispatchers, text display updater, and actionbar announcers.
 
 ---
 
@@ -116,22 +119,75 @@ All commands require the `WorldRadioDJ` tag to execute.
 | Action | In-Game Command | Description |
 |---|---|---|
 | **Control Panel (GUI)** | `/function worldradio:radio/help`<br>*(or `/dialog show @s worldradio:help`)* | Opens the official Minecraft Modal Dialog GUI with clickable buttons |
-| **Chat Controls** | `/function worldradio:chat_help` | Displays clickable control buttons inside your chat window |
 | **Summon Boombox** | `/function worldradio:summon_boombox` | Summons an Animated Java boombox model at your location |
 | **Remove Nearest Boombox** | `/function worldradio:remove_boombox` | Removes the nearest boombox model (within 5 blocks) |
-| **Remove All Boomboxes** | `/function worldradio:remove_all_boomboxes` | Removes all boomboxes currently in the world |
-| **Play / Resume** | `/function worldradio:radio/play` | Starts or resumes song playback on all boomboxes |
-| **Pause** | `/function worldradio:radio/pause` | Pauses playback at the current song timestamp |
-| **Stop** | `/function worldradio:radio/stop` | Stops playback, resets position to tick 0, clears displays |
-| **Next Song** | `/function worldradio:radio/next` | Advances to the next song in sequential order |
-| **Previous Song** | `/function worldradio:radio/previous` | Goes back to the previous song in sequential order |
-| **Shuffle Song** | `/function worldradio:radio/shuffle` | Picks a random song from the playlist (advances if same) |
-| **Toggle Auto-Play Mode** | `/function worldradio:radio/toggle_shuffle` | Toggles between Sequential and Shuffle mode when songs end |
+| **Summon Jukebox** | `/function worldradio:summon_jukebox` | Summons an interactive 3D animated Jukebox model |
+| **Remove Nearest Jukebox** | `/function worldradio:remove_jukebox` | Removes the nearest Jukebox model (within 5 blocks) |
+| **Global Play** | `/function worldradio:radio/play` | Starts or resumes song playback on all global boomboxes |
+| **Global Pause** | `/function worldradio:radio/pause` | Pauses global playback at current timestamp |
+| **Global Stop** | `/function worldradio:radio/stop` | Stops global playback, resets position to tick 0, clears displays |
+| **Global Next / Prev** | `/function worldradio:radio/next`<br>`/function worldradio:radio/previous` | Advances or retreats through global tracks |
+| **Global Shuffle** | `/function worldradio:radio/shuffle` | Picks a random song from playlist for Global Radio |
+| **Play Jukeboxes** | `/function worldradio:jukebox/control/play` | Starts playback and needle drops across all Jukebox zones |
+| **Stop Jukeboxes** | `/function worldradio:jukebox/control/stop` | Halts music and lifts needles across all Jukebox zones |
+| **Next / Prev Track** | `/function worldradio:jukebox/control/next`<br>`/function worldradio:jukebox/control/prev` | Swaps vinyl disc and changes track across all Jukebox zones |
+| **Jukebox Shuffle** | `/function worldradio:jukebox/control/shuffle` | Picks a random song from playlist for Jukebox zones |
+| **Set Zone Radius** | `/function worldradio:jukebox/set_radius` | Sets custom zone radius in blocks |
 | **Toggle Notifications** | `/function worldradio:radio/toggle_announce` | Cycles song announcements: `Both` $\rightarrow$ `Actionbar` $\rightarrow$ `Chat` $\rightarrow$ `None` |
-| **Seek +5s** | `/function worldradio:radio/seek_forward` | Seeks forward 100 ticks (5 seconds) |
-| **Seek -5s** | `/function worldradio:radio/seek_backward` | Seeks backward 100 ticks (5 seconds) |
-| **Custom Seek** | `/function worldradio:radio/seek_by {ticks: 200}` | Seeks by any custom tick count (+forward / -backward) |
-| **Radio Status** | `/function worldradio:radio/status` | Displays radio state, current song title, mode, and boombox count |
+| **Reset Everything** | `/function worldradio:reset` | Resets all playback, model bones, scores, and displays |
+
+---
+
+### 3D Boombox
+
+<table>
+<tr>
+<td width="30%" align="center">
+<img src="assets/boombox.png" alt="WorldRadio 3D Boombox" width="220"/>
+</td>
+<td width="70%" valign="middle">
+
+Summon using `/function worldradio:summon_boombox`.
+
+* **Live LCD Screen**: Displays the current song title.
+* **Animated Speakers**: Subwoofers pulse to the music.
+* **Synchronized Playback**: Plays Global Radio or syncs with nearby Jukeboxes.
+
+</td>
+</tr>
+</table>
+
+---
+
+### 3D Jukebox
+
+<table>
+<tr>
+<td width="30%" align="center">
+<img src="assets/jukebox.png" alt="WorldRadio 3D Jukebox" width="200"/>
+</td>
+<td width="70%" valign="middle">
+
+Summon using `/function worldradio:summon_jukebox`.
+
+* **Interactive Buttons**: Right-click to Play, Stop, Next, or Previous.
+* **Animated Turntable**: Vinyl record player with moving needle and discs.
+* **Mesh Syncing**: Jukeboxes in range automatically link and play together.
+
+</td>
+</tr>
+</table>
+
+---
+
+### Dynamic Radius & Seamless Zone Handover
+
+- **Local Jukebox Broadcast**: Jukeboxes broadcast their audio exclusively to surrounding boomboxes within their configured radius (default: 20 blocks).
+- **Dynamic Handover**:
+  - **Entering a Zone**: When a boombox is inside a Jukebox's radius, it automatically silences Global Radio and tunes directly into the Jukebox's local music.
+  - **Leaving a Zone**: If the radius shrinks or the boombox is outside all Jukebox zones, it seamlessly transfers back to the server-wide Global Radio broadcast.
+
+---
 
 ### Song Notification Modes
 
@@ -144,49 +200,44 @@ Customize how song changes are announced to players when playback starts or swit
 | **Chat Only** | Sends `[WorldRadio] Now Playing: <Song>` into the chat log without actionbar text. | `/function worldradio:radio/set_announce_chat` |
 | **None (Silent)** | Completely silent notifications (boomboxes still play music and show text on screen). | `/function worldradio:radio/set_announce_none` |
 
-> [!TIP]
-> You can quickly cycle through all 4 modes by clicking **`📢 Toggle Notifications`** in the Control Panel GUI (`/function worldradio:radio/help`) or by running `/function worldradio:radio/toggle_announce`.
-
 ---
 
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/datapacks_folder.svg" width="20" height="20" align="center" /> System Architecture & How It Works
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      WorldRadio Core                        │
-│                                                             │
-│   ┌─────────────────────┐         ┌─────────────────────┐   │
-│   │    Animated Java    │         │  NoteBlockStudio    │   │
-│   │    Boombox Model    │         │     Song Files      │   │
-│   │     (data/aj/)      │         │ (data/worldradio/)  │   │
-│   └──────────┬──────────┘         └──────────┬──────────┘   │
-│              │                               │              │
-│              └───────────────┬───────────────┘              │
-│                              ▼                              │
-│               ┌─────────────────────────────┐               │
-│               │   Global Radio Dispatcher   │               │
-│               │     & Multi-Speaker Sync    │               │
-│               └──────────────┬──────────────┘               │
-│                              │                              │
-│              ┌───────────────┴───────────────┐              │
-│              ▼                               ▼              │
-│   ┌─────────────────────┐         ┌─────────────────────┐   │
-│   │  Live Screen Text   │         │ Actionbar Announce  │   │
-│   │     on Boombox      │         │   to all Players    │   │
-│   └─────────────────────┘         └─────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           WorldRadio Core                               │
+│                                                                         │
+│   ┌─────────────────────┐                     ┌─────────────────────┐   │
+│   │    Animated Java    │                     │  NoteBlockStudio    │   │
+│   │  Boombox & Jukebox  │                     │     Song Files      │   │
+│   │     (data/aj/)      │                     │ (data/worldradio/)  │   │
+│   └──────────┬──────────┘                     └──────────┬──────────┘   │
+│              │                                           │              │
+│              └─────────────────────┬─────────────────────┘              │
+│                                    ▼                                    │
+│                 ┌─────────────────────────────────────┐                 │
+│                 │       WorldRadio Dispatcher         │                 │
+│                 │   • Global Radio Broadcast          │                 │
+│                 │   • Local Jukebox Mesh Network      │                 │
+│                 └──────────────────┬──────────────────┘                 │
+│                                    │                                    │
+│              ┌─────────────────────┴─────────────────────┐              │
+│              ▼                                           ▼              │
+│   ┌─────────────────────┐                     ┌─────────────────────┐   │
+│   │  Live Screen Text   │                     │ Actionbar Announce  │   │
+│   │  on Boombox Models  │                     │   to all Players    │   │
+│   └─────────────────────┘                     └─────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. **Pure Separation of Concerns**:
    - `data/aj/` and `data/animated_java/` are **pure Animated Java exports**. Custom radio code never edits these files, meaning you can update your Blockbench model at any time and re-export without breaking radio logic.
    - NoteBlockStudio note trees in `data/worldradio/function/songs/<song>/` are pure audio pipelines.
-   - All controller logic, playlist state tracking, and scoreboard dispatchers live safely in `data/worldradio/function/radio/`.
+   - All controller logic, playlist state tracking, and scoreboard dispatchers live safely in `data/worldradio/function/radio/` and `data/worldradio/function/jukebox/`.
 
-2. **Auto-Syncing Newly Summoned Boomboxes**:
-   - If music is already playing and a player summons a new boombox, the system automatically binds the new entity to the active song clock, starts its playing animation on the correct frame, and writes the active song title to its digital screen.
-
-3. **Tempo & Microtick Quantization**:
-   - NoteBlockStudio automatically quantizes exported songs to 20 ticks per second. Playback speeds can be dynamically varied by adjusting the `speed nbs_<song>` scoreboard objective.
+2. **1x Normal Speed Guarantee**:
+   - Centralized per-tick execution ensures that every boombox and jukebox entity advances its song clock by `+speed` exactly once per game tick, guaranteeing pristine audio clarity with zero double-speed or phase distortion regardless of how many devices overlap.
 
 ---
 
@@ -197,30 +248,6 @@ When exporting songs from NoteBlockStudio to use with WorldRadio:
 - **Quantization**: Leave default tempo quantization enabled (20 ticks/second).
 - **Microtick Optimization**: Enabled by default in NBS exports.
 - **Importing**: Place the exported `.zip` file anywhere on your computer, open **`WorldRadioManager.exe`**, select the ZIP, and click **Import Song**.
-
----
-
-## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/powershell_file.svg" width="20" height="20" align="center" /> Command-Line Alternative (PowerShell)
-
-If you prefer using the command line instead of the GUI program, PowerShell scripts are included:
-
-### Add / Update Song:
-```powershell
-.\add_song.ps1 "C:\Path\To\Song.zip" "Display Title"
-```
-*Example:*
-```powershell
-.\add_song.ps1 "C:\Users\devus\Downloads\steam_gardens.zip" "Steam Gardens"
-```
-
-### Remove Song:
-```powershell
-.\remove_song.ps1 <song_folder_name>
-```
-*Example:*
-```powershell
-.\remove_song.ps1 steam_gardens
-```
 
 ---
 
@@ -235,8 +262,6 @@ World Radio/
 ├── WorldRadioManager.cs          # C# Source code for WorldRadioManager
 ├── README.md                     # Complete documentation & guide
 ├── LICENSE                       # CC BY-NC 4.0 License
-├── add_song.ps1                  # CLI song importer script
-├── remove_song.ps1               # CLI song remover script
 │
 ├── worldradio datapack/          # Pure Minecraft Datapack
 │   ├── pack.mcmeta               # Datapack metadata (by Reddev)
@@ -249,12 +274,15 @@ World Radio/
 │           ├── dialog/           # Minecraft Modal Dialog GUI definitions
 │           │   └── help.json     # Control panel GUI definition
 │           └── function/
+│               ├── reset.mcfunction          # Complete system reset
 │               ├── summon_boombox.mcfunction
 │               ├── remove_boombox.mcfunction
-│               ├── remove_all_boomboxes.mcfunction
+│               ├── summon_jukebox.mcfunction
+│               ├── remove_jukebox.mcfunction
 │               ├── load.mcfunction
 │               ├── tick.mcfunction
-│               ├── radio/        # Playback controllers & playlist engine
+│               ├── jukebox/      # Local zone mesh & 3D animation controllers
+│               ├── radio/        # Global radio controllers & playlist engine
 │               └── songs/        # NoteBlockStudio song notes & dispatchers
 │
 └── worldradio resourcepack/      # Pure Minecraft Resource Pack
@@ -262,10 +290,8 @@ World Radio/
     ├── pack.png                  # Resource pack icon
     ├── assets.ajmeta             # Animated Java metadata
     └── assets/
-        └── aj/
-            ├── models/           # Exported boombox display models
-            └── textures/blueprint/worldradio_boombox/
-                └── boombox_base.png # Boombox texture
+        ├── aj/                   # 3D models & textures for Boombox and Jukebox
+        └── minecraft/            # Custom note block instrument sounds
 ```
 
 ---
@@ -278,11 +304,11 @@ World Radio/
 > /tag @s add WorldRadioDJ
 > ```
 
-#### Q: The boombox model shows a purple and black checkerboard texture.
-> **Fix**: Ensure `boombox_base.png` is placed in `worldradio resourcepack/assets/aj/textures/blueprint/worldradio_boombox/boombox_base.png` (not in the `models/` directory) and press **F3 + T** to reload resource packs.
+#### Q: I placed multiple jukeboxes next to each other. How do they sync?
+> **Fix**: Jukeboxes within radius distance automatically join into a mesh network. Pressing Play, Stop, Next, or Prev on any console will animate all neighboring consoles and keep songs synchronized in 1x lockstep.
 
-#### Q: I imported a song, but it doesn't show up in game.
-> **Fix**: Run `/reload` in chat. If you added the song while playing in singleplayer, rejoining the world ensures all client and server caches refresh.
+#### Q: How do I reset all music and restore all models to resting pose?
+> **Fix**: Click the **🔄 Reset Everything** button at the bottom of the Control Panel (`/function worldradio:radio/help`) or run `/function worldradio:reset`.
 
 ---
 

@@ -595,37 +595,37 @@ namespace WorldRadioManager
 
                 // 1. play.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "play.mcfunction"),
-                    string.Format("# Song: {0} - Play\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] add {1}\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {2} 0\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {3} -1\n\nscoreboard players set #radio {2} 0\nscoreboard players set #radio {3} -1\nscoreboard players set #radio_has_song worldradio.data 1\n",
+                    string.Format("# Song: {0} - Play\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] add {1}\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] {2} 0\nscoreboard players set @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] {3} -1\n\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run tag @s add {1}\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run scoreboard players set @s {2} 0\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run scoreboard players set @s {3} -1\n\nscoreboard players set #radio {2} 0\nscoreboard players set #radio {3} -1\nscoreboard players set #radio_has_song worldradio.data 1\n",
                     title, tag, baseObj, tickObj));
 
                 // 2. pause.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "pause.mcfunction"),
-                    string.Format("# Song: {0} - Pause\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] remove {1}\nscoreboard players set #radio_has_song worldradio.data 0\n",
+                    string.Format("# Song: {0} - Pause\ntag @e[type=minecraft:item_display,tag={1}] remove {1}\nscoreboard players set #radio_has_song worldradio.data 0\n",
                     title, tag));
 
                 // 3. resume.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "resume.mcfunction"),
-                    string.Format("# Song: {0} - Resume\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] add {1}\nscoreboard players set #radio_has_song worldradio.data 1\n",
+                    string.Format("# Song: {0} - Resume\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] add {1}\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run tag @s add {1}\nscoreboard players set #radio_has_song worldradio.data 1\n",
                     title, tag));
 
                 // 4. stop.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "stop.mcfunction"),
-                    string.Format("# Song: {0} - Stop\ntag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] remove {1}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {2}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {3}\n\nscoreboard players reset #radio {2}\nscoreboard players reset #radio {3}\nscoreboard players set #radio_has_song worldradio.data 0\n",
+                    string.Format("# Song: {0} - Stop\ntag @e[type=minecraft:item_display,tag={1}] remove {1}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {2}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] {3}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] {2}\nscoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] {3}\n\nscoreboard players reset #radio {2}\nscoreboard players reset #radio {3}\nscoreboard players set #radio_has_song worldradio.data 0\n",
                     title, tag, baseObj, tickObj));
 
                 // 5. tick.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "tick.mcfunction"),
-                    string.Format("# Song: {0} - Tick\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1}] run scoreboard players operation @s {2} += speed {2}\nscoreboard players operation #radio {2} += speed {2}\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1}] at @s run function worldradio:songs/{3}/tree/{4}\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},limit=1] run scoreboard players operation #radio {3} = @s {3}\n\nexecute store result score #has_tag worldradio.data if entity @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},limit=1]\nexecute if score #has_tag worldradio.data matches 0 run scoreboard players set #radio_has_song worldradio.data 0\n",
-                    title, tag, baseObj, tickObj, rootTree));
+                    string.Format("# Song: {0} - Tick\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},tag=!worldradio.local_zone] run scoreboard players operation @s {2} += speed {2}\nscoreboard players operation #radio {2} += speed {2}\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag={1},tag=!worldradio.local_zone] at @s run function worldradio:songs/{3}/tree/{4}\n\nexecute as @e[type=minecraft:item_display,tag={1},limit=1] run scoreboard players operation #radio {2}_t = @s {2}_t\n\nexecute if score #radio {2} matches 341760.. run scoreboard players set #radio_has_song worldradio.data 0\n",
+                    title, tag, baseObj, songFolderName, rootTree));
 
                 // 6. seek.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "seek.mcfunction"),
-                    string.Format("# Song: {0} - Seek\nscoreboard players operation #seek_delta worldradio.data = #seek_ticks worldradio.data\nscoreboard players operation #seek_delta worldradio.data *= speed {1}\nscoreboard players operation #radio {1} += #seek_delta worldradio.data\n\nexecute if score #radio {1} matches ..-1 run scoreboard players set #radio {1} 0\nexecute if score #radio {1} matches 0 run scoreboard players set #radio {2} -1\n\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data = #radio {1}\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data /= speed {1}\nexecute if score #radio {1} matches 1.. run scoreboard players remove #temp worldradio.data 1\nexecute if score #radio {1} matches 1.. run scoreboard players operation #radio {2} = #temp worldradio.data\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s {1} = #radio {1}\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root] run scoreboard players operation @s {2} = #radio {2}\n",
+                    string.Format("# Song: {0} - Seek\nscoreboard players operation #seek_delta worldradio.data = #seek_ticks worldradio.data\nscoreboard players operation #seek_delta worldradio.data *= speed {1}\nscoreboard players operation #radio {1} += #seek_delta worldradio.data\n\nexecute if score #radio {1} matches ..-1 run scoreboard players set #radio {1} 0\nexecute if score #radio {1} matches 0 run scoreboard players set #radio {2} -1\n\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data = #radio {1}\nexecute if score #radio {1} matches 1.. run scoreboard players operation #temp worldradio.data /= speed {1}\nexecute if score #radio {1} matches 1.. run scoreboard players remove #temp worldradio.data 1\nexecute if score #radio {1} matches 1.. run scoreboard players operation #radio {2} = #temp worldradio.data\n\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] run scoreboard players operation @s {1} = #radio {1}\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] run scoreboard players operation @s {2} = #radio {2}\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run scoreboard players operation @s {1} = #radio {1}\nexecute if score #jukebox_mode worldradio.data matches 0 as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root] if score @s worldradio.jb_state matches 0 run scoreboard players operation @s {2} = #radio {2}\n",
                     title, baseObj, tickObj));
 
                 // 7. update_display.mcfunction
                 File.WriteAllText(Path.Combine(radioSongDir, "update_display.mcfunction"),
-                    string.Format("# Song: {0} - Update Boombox Display\nexecute as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{0}\",color:\"dark_green\"}}]}}\n", title));
+                    string.Format("# Song: {0} - Update Boombox Display\nexecute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{0}\",color:\"dark_green\"}}]}}\n", title));
 
                 Log("Generated connector functions in: data/worldradio/function/radio/songs/" + songFolderName);
 
@@ -765,7 +765,7 @@ namespace WorldRadioManager
             var displayLines = new List<string> { "# WorldRadio - Update Boombox Text Display" };
             foreach (var s in songs)
             {
-                displayLines.Add(string.Format("execute if score #song worldradio.data matches {0} as @e[type=minecraft:text_display,tag=boombox] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{1}\",color:\"dark_green\"}}]}}", s.Index, s.DisplayTitle));
+                displayLines.Add(string.Format("execute if score #song worldradio.data matches {0} as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{1}\",color:\"dark_green\"}}]}}", s.Index, s.DisplayTitle));
             }
             File.WriteAllLines(Path.Combine(radioSongsDir, "update_display.mcfunction"), displayLines);
 
@@ -798,6 +798,7 @@ namespace WorldRadioManager
                 "execute as @s[type=minecraft:player,tag=!WorldRadioDJ] run return 0",
                 "",
                 "execute store result score #boombox_count worldradio.data if entity @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root]",
+                "execute store result score #jukebox_count worldradio.data if entity @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root]",
                 "",
                 "tellraw @a [\"\\n\",{\"text\":\"======== \",\"color\":\"dark_green\"},{\"text\":\"WorldRadio Status\",\"color\":\"green\",\"bold\":true},{\"text\":\" ========\",\"color\":\"dark_green\"}]",
                 ""
@@ -818,17 +819,97 @@ namespace WorldRadioManager
                 "execute if score #shuffle worldradio.data matches 0 run tellraw @a [{\"text\":\" Playlist Mode: \",\"color\":\"gray\"},{\"text\":\"Sequential\",\"color\":\"aqua\",\"bold\":true}]",
                 "execute if score #shuffle worldradio.data matches 1 run tellraw @a [{\"text\":\" Playlist Mode: \",\"color\":\"gray\"},{\"text\":\"Shuffle\",\"color\":\"gold\",\"bold\":true}]",
                 "",
+                "# Jukebox scope info",
+                "execute if score #jukebox_mode worldradio.data matches 0 run tellraw @a [{\"text\":\" Jukebox Scope: \",\"color\":\"gray\"},{\"text\":\"Global (All Boomboxes)\",\"color\":\"aqua\",\"bold\":true}]",
+                "execute if score #jukebox_mode worldradio.data matches 1 run tellraw @a [{\"text\":\" Jukebox Scope: \",\"color\":\"gray\"},{\"text\":\"Local (Zone Only)\",\"color\":\"gold\",\"bold\":true}]",
+                "",
                 "# Notification mode info",
                 "execute if score #announce_mode worldradio.data matches 0 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Both (Actionbar & Chat)\",\"color\":\"aqua\",\"bold\":true}]",
                 "execute if score #announce_mode worldradio.data matches 1 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Actionbar Only\",\"color\":\"gold\",\"bold\":true}]",
                 "execute if score #announce_mode worldradio.data matches 2 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"Chat Only\",\"color\":\"yellow\",\"bold\":true}]",
                 "execute if score #announce_mode worldradio.data matches 3 run tellraw @a [{\"text\":\" Notifications: \",\"color\":\"gray\"},{\"text\":\"None (Silent)\",\"color\":\"red\",\"bold\":true}]",
+                "tellraw @a [{\"text\":\" Jukebox Zone Radius: \",\"color\":\"gray\"},{\"score\":{\"name\":\"#jukebox_radius\",\"objective\":\"worldradio.data\"},\"color\":\"gold\",\"bold\":true},{\"text\":\" blocks\",\"color\":\"gray\"}]",
                 "",
-                "# Boombox counts",
+                "# Device counts",
                 "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"light_purple\",\"bold\":true}]",
+                "tellraw @a [{\"text\":\" Active Jukeboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#jukebox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"gold\",\"bold\":true}]",
                 "tellraw @a [{\"text\":\"=================================\",\"color\":\"dark_green\"},\"\\n\"]"
             });
             File.WriteAllLines(Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "status.mcfunction"), statusLines);
+
+            // 13. Jukebox local dispatchers
+            string jbLocalDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "jukebox", "local");
+            Directory.CreateDirectory(jbLocalDir);
+
+            var jbPlayLines = new List<string> { "# WorldRadio - Start Song Playback for Local Jukebox Zone (Macro)" };
+            var jbStopLines = new List<string> { "# WorldRadio - Stop Local Playback on this Jukebox and its Zone Boomboxes (Macro)", "scoreboard players set @s worldradio.jb_state 0" };
+            var jbTickLines = new List<string> { "# WorldRadio - Tick Local Jukebox Song Playback" };
+            var jbSyncLines = new List<string> { "# WorldRadio - Sync Newly Entered Zone Boomboxes to Jukebox (Macro)" };
+            var jbJoinMeshLines = new List<string>
+            {
+                "# WorldRadio - Join Active Playing Jukebox Mesh",
+                "# 1. Copy active song index from nearest playing jukebox",
+                "execute at @s run scoreboard players operation @s worldradio.jb_song = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={worldradio.jb_state=1},limit=1,sort=nearest] worldradio.jb_song"
+            };
+
+            foreach (var s in songs)
+            {
+                // Play
+                jbPlayLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run tag @s add {1}", s.Index, s.TagName));
+                jbPlayLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run scoreboard players set @s {1} 0", s.Index, s.BaseObj));
+                jbPlayLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run scoreboard players set @s {1} -1", s.Index, s.TickObj));
+                jbPlayLines.Add(string.Format("$execute if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run tag @s add {1}", s.Index, s.TagName));
+                jbPlayLines.Add(string.Format("$execute if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run scoreboard players set @s {1} 0", s.Index, s.BaseObj));
+                jbPlayLines.Add(string.Format("$execute if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run scoreboard players set @s {1} -1", s.Index, s.TickObj));
+                jbPlayLines.Add(string.Format("$execute if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run function aj:worldradio_boombox/animations/playing/play", s.Index));
+                jbPlayLines.Add(string.Format("$execute if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{1}\",color:\"dark_green\"}}]}}", s.Index, s.DisplayTitle));
+
+                // Stop
+                jbStopLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run tag @s remove {1}", s.Index, s.TagName));
+                jbStopLines.Add(string.Format("$execute at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run tag @s remove {1}", s.Index, s.TagName));
+                jbStopLines.Add(string.Format("$execute at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] run function aj:worldradio_boombox/animations/playing/stop", s.Index));
+
+                // Tick (1x Speed Architecture)
+                jbTickLines.Add(string.Format("# Song {0} - {1}", s.Index, s.DisplayTitle));
+                jbTickLines.Add(string.Format("execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={{worldradio.jb_state=1,worldradio.jb_song={0}}},tag={1}] run scoreboard players operation @s {2} += speed {2}", s.Index, s.TagName, s.BaseObj));
+                jbTickLines.Add(string.Format("execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={{worldradio.jb_state=1,worldradio.jb_song={0}}},tag={1}] at @s run function worldradio:songs/{2}/tree/{3}", s.Index, s.TagName, s.FolderName, s.RootTree));
+                jbTickLines.Add(string.Format("execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.local_zone,tag={0}] run scoreboard players operation @s {1} += speed {1}", s.TagName, s.BaseObj));
+                jbTickLines.Add(string.Format("execute as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.local_zone,tag={0}] at @s run function worldradio:songs/{1}/tree/{2}", s.TagName, s.FolderName, s.RootTree));
+                jbTickLines.Add("");
+
+                // Sync Boombox
+                jbSyncLines.Add(string.Format("$execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run scoreboard players operation @s {1} = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,distance=..$(radius),limit=1,sort=nearest] {1}", s.Index, s.BaseObj));
+                jbSyncLines.Add(string.Format("$execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run scoreboard players operation @s {1} = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,distance=..$(radius),limit=1,sort=nearest] {1}", s.Index, s.TickObj));
+                jbSyncLines.Add(string.Format("$execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run tag @s add {1}", s.Index, s.TagName));
+                jbSyncLines.Add(string.Format("$execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run function aj:worldradio_boombox/animations/playing/play", s.Index));
+                jbSyncLines.Add(string.Format("$execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_song matches {0} at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {{text:\"\",extra:[{{text:\"Playing: \",color:\"green\"}},{{text:\"{1}\",color:\"dark_green\"}}]}}", s.Index, s.DisplayTitle));
+
+                // Join Playing Mesh Jukebox
+                jbJoinMeshLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} at @s run scoreboard players operation @s {1} = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={{worldradio.jb_state=1}},limit=1,sort=nearest] {1}", s.Index, s.BaseObj));
+                jbJoinMeshLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} at @s run scoreboard players operation @s {1} = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={{worldradio.jb_state=1}},limit=1,sort=nearest] {1}", s.Index, s.TickObj));
+                jbJoinMeshLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run tag @s add {1}", s.Index, s.TagName));
+                jbJoinMeshLines.Add(string.Format("execute if score @s worldradio.jb_song matches {0} run function aj:worldradio_jukebox/animations/playing/play", s.Index));
+            }
+            jbJoinMeshLines.Add("scoreboard players set @s worldradio.jb_state 1");
+            jbStopLines.Add("$execute at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {text:\"\",extra:[{text:\"Playing: \",color:\"green\"},{text:\"\",color:\"dark_green\"}]}");
+
+            jbSyncLines.Add("$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run function aj:worldradio_boombox/animations/playing/stop");
+            jbSyncLines.Add("$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {text:\"\",extra:[{text:\"Playing: \",color:\"green\"},{text:\"\",color:\"dark_green\"}]}");
+
+            File.WriteAllLines(Path.Combine(jbLocalDir, "play_song.mcfunction"), jbPlayLines);
+            File.WriteAllLines(Path.Combine(jbLocalDir, "stop_playback.mcfunction"), jbStopLines);
+            File.WriteAllLines(Path.Combine(jbLocalDir, "tick_song.mcfunction"), jbTickLines);
+            File.WriteAllLines(Path.Combine(jbLocalDir, "sync_boombox.mcfunction"), jbSyncLines);
+            File.WriteAllLines(Path.Combine(jbLocalDir, "join_playing_mesh.mcfunction"), jbJoinMeshLines);
+
+            // 14. Direct play_track functions for tab-completion
+            string playTrackDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "play_track");
+            Directory.CreateDirectory(playTrackDir);
+            foreach (var s in songs)
+            {
+                File.WriteAllText(Path.Combine(playTrackDir, s.FolderName + ".mcfunction"),
+                    string.Format("# WorldRadio - Play Track: {0}\nfunction worldradio:radio/internal/stop_playback\nscoreboard players set #song worldradio.data {1}\nfunction worldradio:radio/internal/start_playback\n", s.DisplayTitle, s.Index));
+            }
 
             Log(string.Format("Rebuilt all playlist dispatchers for {0} song(s).", songs.Count));
         }

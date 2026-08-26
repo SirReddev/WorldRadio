@@ -3,3 +3,4 @@ execute as @s[type=minecraft:player,tag=!WorldRadioDJ] run tellraw @s [{"text":"
 execute as @s[type=minecraft:player,tag=!WorldRadioDJ] run return 0
 
 execute at @s rotated ~ 0 run function aj:worldradio_boombox/summon {args: {}}
+function worldradio:jukebox/zones/refresh_zones with storage worldradio:settings

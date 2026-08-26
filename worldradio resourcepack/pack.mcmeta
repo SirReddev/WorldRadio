@@ -1,8 +1,6 @@
 {
-	"pack": {
-		"pack_format": 88,
-		"min_format": 84,
-		"max_format": 84,
-		"description": "WorldRadio Resources & Boombox by Reddev (https://reddev.dev)"
-	}
+  "pack": {
+    "pack_format": 65,
+    "description": "WorldRadio Resources by Reddev"
+  }
 }

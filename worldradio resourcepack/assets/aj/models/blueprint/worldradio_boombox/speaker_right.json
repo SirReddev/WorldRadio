@@ -1,6 +1,6 @@
 {
 	"textures": {
-		"0": "aj:blueprint/worldradio_boombox/boombox_base",
+		"0": "aj:blueprint/worldradio_boombox/worldradio_boombox_base",
 		"particle": "minecraft:item/pufferfish"
 	},
 	"display": {

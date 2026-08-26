@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "📏 Zone Radius",
+    "color": "gold",
+    "bold": true
+  },
+  "body": [],
+  "inputs": [
+    {
+      "type": "minecraft:number_range",
+      "key": "radius",
+      "label": "Radius: ",
+      "start": 5,
+      "end": 500,
+      "step": 5,
+      "initial": 20,
+      "width": 310
+    }
+  ],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "✔ Apply Radius",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Apply the selected zone radius"
+      },
+      "width": 150,
+      "action": {
+        "type": "minecraft:dynamic/run_command",
+        "template": "function worldradio:jukebox/set_radius {radius:$(radius)}"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Hub",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to main Control Hub"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:help"
+      }
+    }
+  ]
+}

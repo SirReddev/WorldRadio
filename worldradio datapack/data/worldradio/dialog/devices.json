@@ -1,0 +1,103 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "📻 Devices",
+    "color": "aqua",
+    "bold": true
+  },
+  "body": [],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "📻 + Summon Boombox",
+        "color": "dark_green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Summon 3D Boombox speaker at your position"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:summon_boombox"
+      }
+    },
+    {
+      "label": {
+        "text": "🗑 - Remove Boombox",
+        "color": "dark_red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Remove nearest Boombox within 5 blocks"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:remove_boombox"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 + Summon Jukebox",
+        "color": "dark_green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Summon 3D Animated Jukebox console at your position"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:summon_jukebox"
+      }
+    },
+    {
+      "label": {
+        "text": "🗑 - Remove Jukebox",
+        "color": "dark_red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Remove nearest Jukebox within 5 blocks"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:remove_jukebox"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Hub",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to main Control Hub"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:help"
+      }
+    },
+    {
+      "label": {
+        "text": "🌐 Global Radio",
+        "color": "green"
+      },
+      "tooltip": {
+        "text": "Go to Global Radio controls"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:global"
+      }
+    }
+  ]
+}

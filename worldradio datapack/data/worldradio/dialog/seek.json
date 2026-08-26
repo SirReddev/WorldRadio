@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "⏩ Seek Track",
+    "color": "gold",
+    "bold": true
+  },
+  "body": [],
+  "inputs": [
+    {
+      "type": "minecraft:number_range",
+      "key": "seconds",
+      "label": "Offset (s): ",
+      "start": -60,
+      "end": 60,
+      "step": 5,
+      "initial": 0,
+      "width": 310
+    }
+  ],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "✔ Apply Seek",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Jump playback by selected seconds"
+      },
+      "width": 150,
+      "action": {
+        "type": "minecraft:dynamic/run_command",
+        "template": "function worldradio:radio/seek_custom {seconds:$(seconds)}"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Global",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to Global Radio controls"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:global"
+      }
+    }
+  ]
+}

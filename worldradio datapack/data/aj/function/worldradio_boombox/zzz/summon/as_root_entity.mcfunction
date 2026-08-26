@@ -12,7 +12,7 @@ function animated_java:global/data_manager/read with storage animated_java:temp 
 data modify storage animated_java:temp entry.data.uuids append from storage animated_java:gu out
 data modify storage animated_java:temp entry.data.root_uuid set from storage animated_java:gu out
 data modify storage animated_java:temp entry.data.blueprint_id set value "aj:worldradio_boombox"
-data modify storage animated_java:temp entry.data.rig_hash set value "7ad27ee2c1fe44dd8b0a4299d6084436e64aaab1def5165e54cdedcd0021e035"
+data modify storage animated_java:temp entry.data.rig_hash set value "6682e1ea1493b00f919585f1ef38d86e5e9570f0eecc53ecb114d9a57e704cde"
 tp @s ~ ~ ~ ~ ~
 execute on passengers if entity @s[tag=aj.worldradio_boombox.node.antenna] run function aj:worldradio_boombox/zzz/summon/as_node/antenna
 data modify storage animated_java:temp entry.data.uuids append from storage animated_java:gu out

@@ -1,0 +1,6 @@
+{
+	"parent": "aj:blueprint/worldradio_jukebox/d1",
+	"textures": {
+		"0": "aj:blueprint/worldradio_boombox/worldradio_jukebox_disc5"
+	}
+}

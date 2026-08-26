@@ -1,5 +1,9 @@
 # WorldRadio - Main Load Function
 scoreboard objectives add worldradio.data dummy
+scoreboard objectives add worldradio.jb_state dummy
+scoreboard objectives add worldradio.jb_song dummy
+scoreboard objectives add worldradio.jb_timer dummy
+scoreboard objectives add worldradio.jb_phase dummy
 
 # Register and load all songs
 function worldradio:radio/songs/registry
@@ -8,7 +12,12 @@ function worldradio:radio/songs/registry
 execute unless score #state worldradio.data matches 0..2 run scoreboard players set #state worldradio.data 0
 execute unless score #song worldradio.data matches 1.. run scoreboard players set #song worldradio.data 1
 execute unless score #shuffle worldradio.data matches 0..1 run scoreboard players set #shuffle worldradio.data 0
+execute unless score #jukebox_shuffle worldradio.data matches 0..1 run scoreboard players set #jukebox_shuffle worldradio.data 0
 execute unless score #announce_mode worldradio.data matches 0..3 run scoreboard players set #announce_mode worldradio.data 0
+execute unless score #jukebox_radius worldradio.data matches 1.. run scoreboard players set #jukebox_radius worldradio.data 20
+
+# Refresh zone data
+function worldradio:jukebox/zones/refresh_zones
 
 # Set initial text on any existing boomboxes
 execute if score #state worldradio.data matches 1..2 run function worldradio:radio/songs/update_display

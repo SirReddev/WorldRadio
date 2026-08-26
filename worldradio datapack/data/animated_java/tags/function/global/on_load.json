@@ -1,4 +1,4 @@
 {
 	"replace": false,
-	"values": ["aj:worldradio_boombox/on_load"]
+	"values": ["aj:worldradio_boombox/on_load", "aj:worldradio_jukebox/on_load"]
 }

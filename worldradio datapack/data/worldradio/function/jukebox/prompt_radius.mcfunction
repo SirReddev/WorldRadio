@@ -1,0 +1,2 @@
+# WorldRadio - Prompt User to Set Radius
+tellraw @s [{"text":"[WorldRadio] ","color":"green","bold":true},{"text":"Click here to enter a new Jukebox Zone Radius: ","color":"gray"},{"text":"[/function worldradio:jukebox/set_radius {radius:20}]","color":"aqua","bold":true,"underlined":true,"clickEvent":{"action":"suggest_command","value":"/function worldradio:jukebox/set_radius {radius:20}"},"hoverEvent":{"action":"show_text","contents":"Click to paste command into chat"}}]

@@ -1,0 +1,118 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "⚙ WorldRadio Settings",
+    "color": "light_purple",
+    "bold": true
+  },
+  "body": [],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "📏 Zone Radius Slider",
+        "color": "light_purple",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Open interactive radius slider and presets"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:radius"
+      }
+    },
+    {
+      "label": {
+        "text": "🔄 Auto-Play Mode",
+        "color": "dark_purple",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Toggle: Sequential vs Shuffle on song finish"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/toggle_shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "📢 Notifications",
+        "color": "white",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Toggle: Both / Actionbar / Chat / None"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/toggle_announce"
+      }
+    },
+    {
+      "label": {
+        "text": "ℹ System Status",
+        "color": "blue",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Print full system diagnostics in chat"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/status"
+      }
+    },
+    {
+      "label": {
+        "text": "📻 Device Manager",
+        "color": "aqua"
+      },
+      "tooltip": {
+        "text": "Manage Boomboxes and Jukeboxes"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:devices"
+      }
+    },
+    {
+      "label": {
+        "text": "🔄 Reset Everything",
+        "color": "red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Stop all playback, clear displays, and restore factory defaults"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:reset"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Hub",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to main Control Hub"
+      },
+      "width": 310,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:help"
+      }
+    }
+  ]
+}

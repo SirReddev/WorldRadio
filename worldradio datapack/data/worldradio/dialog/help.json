@@ -1,16 +1,28 @@
 {
   "type": "minecraft:multi_action",
   "title": {
-    "text": "WorldRadio Control Panel",
+    "text": "📻 WorldRadio Control Panel",
     "color": "green",
     "bold": true
   },
-  "body": [
+  "body": [],
+  "inputs": [
     {
-      "type": "minecraft:plain_message",
-      "contents": {
-        "text": "Click any button to control radio playback:"
-      }
+      "type": "minecraft:number_range",
+      "key": "radius",
+      "label": "Radius: ",
+      "start": 5,
+      "end": 500,
+      "step": 5,
+      "initial": 20,
+      "width": 310
+    },
+    {
+      "type": "minecraft:text",
+      "key": "song",
+      "label": "Song: ",
+      "initial": "",
+      "width": 310
     }
   ],
   "columns": 2,
@@ -20,11 +32,42 @@
   "actions": [
     {
       "label": {
-        "text": "▶ Play / Resume",
-        "color": "green"
+        "text": "📏 Apply Radius",
+        "color": "light_purple",
+        "bold": true
       },
       "tooltip": {
-        "text": "Start or resume song playback"
+        "text": "Save and apply slider radius for all Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "minecraft:dynamic/run_command",
+        "template": "function worldradio:jukebox/set_radius {radius:$(radius)}"
+      }
+    },
+    {
+      "label": {
+        "text": "▶ Play Custom Song",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Play the song entered in the text box globally"
+      },
+      "width": 150,
+      "action": {
+        "type": "minecraft:dynamic/run_command",
+        "template": "function worldradio:radio/play_custom {song:$(song)}"
+      }
+    },
+    {
+      "label": {
+        "text": "🌐 ▶ Global Play",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Global Radio] Start playback on speakers OUTSIDE Jukebox zones"
       },
       "width": 150,
       "action": {
@@ -34,25 +77,12 @@
     },
     {
       "label": {
-        "text": "⏸ Pause",
-        "color": "gold"
+        "text": "🌐 ⏹ Global Stop",
+        "color": "red",
+        "bold": true
       },
       "tooltip": {
-        "text": "Pause playback"
-      },
-      "width": 150,
-      "action": {
-        "type": "run_command",
-        "command": "/function worldradio:radio/pause"
-      }
-    },
-    {
-      "label": {
-        "text": "⏹ Stop",
-        "color": "red"
-      },
-      "tooltip": {
-        "text": "Stop playback and reset to start"
+        "text": "[Global Radio] Stop playback on outside speakers"
       },
       "width": 150,
       "action": {
@@ -62,39 +92,27 @@
     },
     {
       "label": {
-        "text": "⏭ Next Song",
-        "color": "aqua"
+        "text": "🌐 ⏸ Global Pause",
+        "color": "yellow",
+        "bold": true
       },
       "tooltip": {
-        "text": "Play next song in playlist"
+        "text": "[Global Radio] Pause playback on outside speakers"
       },
       "width": 150,
       "action": {
         "type": "run_command",
-        "command": "/function worldradio:radio/next"
+        "command": "/function worldradio:radio/pause"
       }
     },
     {
       "label": {
-        "text": "⏮ Prev Song",
-        "color": "aqua"
+        "text": "🌐 🔀 Global Shuffle",
+        "color": "gold",
+        "bold": true
       },
       "tooltip": {
-        "text": "Play previous song in playlist"
-      },
-      "width": 150,
-      "action": {
-        "type": "run_command",
-        "command": "/function worldradio:radio/previous"
-      }
-    },
-    {
-      "label": {
-        "text": "🔀 Shuffle Song",
-        "color": "gold"
-      },
-      "tooltip": {
-        "text": "Pick a random song"
+        "text": "[Global Radio] Jump to random song on outside speakers"
       },
       "width": 150,
       "action": {
@@ -104,11 +122,102 @@
     },
     {
       "label": {
-        "text": "🔄 Mode: Next / Random",
-        "color": "light_purple"
+        "text": "🌐 ⏮ Global Prev",
+        "color": "blue",
+        "bold": true
       },
       "tooltip": {
-        "text": "Toggle sequential / random on finish"
+        "text": "[Global Radio] Previous track on outside speakers"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/previous"
+      }
+    },
+    {
+      "label": {
+        "text": "🌐 ⏭ Global Next",
+        "color": "aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Global Radio] Next track on outside speakers"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/next"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 ▶ Play Jukeboxes",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Jukebox Zones] Start playback across all stopped Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/play"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 ⏹ Stop Jukeboxes",
+        "color": "red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Jukebox Zones] Stop playback across all active Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/stop"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 ⏮ Prev Track",
+        "color": "blue",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Jukebox Zones] Switch to previous song in Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/prev"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 ⏭ Next Track",
+        "color": "aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Jukebox Zones] Switch to next song in Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/next"
+      }
+    },
+    {
+      "label": {
+        "text": "🔄 Global Auto-Play",
+        "color": "dark_purple",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Global Radio] Toggle: Sequential vs Shuffle on finish"
       },
       "width": 150,
       "action": {
@@ -118,11 +227,27 @@
     },
     {
       "label": {
-        "text": "📢 Toggle Notifications",
-        "color": "light_purple"
+        "text": "🔀 Jukebox Shuffle",
+        "color": "gold",
+        "bold": true
       },
       "tooltip": {
-        "text": "Toggle song notifications: Both / Actionbar / Chat / None"
+        "text": "[Jukebox Zones] Toggle: Sequential vs Shuffle on track finish"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/toggle_shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "📢 Notifications",
+        "color": "white",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Settings] Toggle: Both / Actionbar / Chat / Silent"
       },
       "width": 150,
       "action": {
@@ -132,39 +257,27 @@
     },
     {
       "label": {
-        "text": "⏩ Seek +5s",
-        "color": "gold"
+        "text": "ℹ System Status",
+        "color": "gray",
+        "bold": true
       },
       "tooltip": {
-        "text": "Seek forward 5 seconds"
+        "text": "[Diagnostics] Print full system status in chat"
       },
       "width": 150,
       "action": {
         "type": "run_command",
-        "command": "/function worldradio:radio/seek_forward"
+        "command": "/function worldradio:radio/status"
       }
     },
     {
       "label": {
-        "text": "⏪ Seek -5s",
-        "color": "gold"
+        "text": "📻 + Boombox",
+        "color": "dark_green",
+        "bold": true
       },
       "tooltip": {
-        "text": "Seek backward 5 seconds"
-      },
-      "width": 150,
-      "action": {
-        "type": "run_command",
-        "command": "/function worldradio:radio/seek_backward"
-      }
-    },
-    {
-      "label": {
-        "text": "📻 Summon Boombox",
-        "color": "green"
-      },
-      "tooltip": {
-        "text": "Summon boombox at your location"
+        "text": "[Devices] Summon 3D Boombox speaker at feet"
       },
       "width": 150,
       "action": {
@@ -174,11 +287,12 @@
     },
     {
       "label": {
-        "text": "🗑 Remove Nearest",
-        "color": "red"
+        "text": "🗑 - Boombox",
+        "color": "dark_red",
+        "bold": true
       },
       "tooltip": {
-        "text": "Remove nearest boombox model"
+        "text": "[Devices] Remove nearest Boombox within 5 blocks"
       },
       "width": 150,
       "action": {
@@ -188,16 +302,47 @@
     },
     {
       "label": {
-        "text": "ℹ Radio Status",
-        "color": "blue"
+        "text": "🎶 + Jukebox",
+        "color": "dark_green",
+        "bold": true
       },
       "tooltip": {
-        "text": "View current radio state, active boomboxes & notifications"
+        "text": "[Devices] Summon 3D Animated Jukebox console at feet"
       },
       "width": 150,
       "action": {
         "type": "run_command",
-        "command": "/function worldradio:radio/status"
+        "command": "/function worldradio:summon_jukebox"
+      }
+    },
+    {
+      "label": {
+        "text": "🗑 - Jukebox",
+        "color": "dark_red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Devices] Remove nearest Jukebox within 5 blocks"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:remove_jukebox"
+      }
+    },
+    {
+      "label": {
+        "text": "🔄 Reset Everything",
+        "color": "red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "[Reset] Stop all playback, clear displays, and restore defaults"
+      },
+      "width": 310,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:reset"
       }
     }
   ]

@@ -1,0 +1,162 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "🌐 Global Radio",
+    "color": "green",
+    "bold": true
+  },
+  "body": [],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "▶ Play / Resume",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Start or resume global radio"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/play"
+      }
+    },
+    {
+      "label": {
+        "text": "⏹ Stop Radio",
+        "color": "red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Stop global radio and reset to start"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/stop"
+      }
+    },
+    {
+      "label": {
+        "text": "⏸ Pause Radio",
+        "color": "yellow",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Pause global radio at current position"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/pause"
+      }
+    },
+    {
+      "label": {
+        "text": "🔀 Shuffle Track",
+        "color": "gold",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Jump to a random song in global playlist"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/shuffle"
+      }
+    },
+    {
+      "label": {
+        "text": "⏮ Previous Track",
+        "color": "dark_aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Play previous track on global radio"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/previous"
+      }
+    },
+    {
+      "label": {
+        "text": "⏭ Next Track",
+        "color": "aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Play next track on global radio"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/next"
+      }
+    },
+    {
+      "label": {
+        "text": "⏩ Custom Seek Slider",
+        "color": "gold",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Open interactive seek slider (-60s to +60s)"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:seek"
+      }
+    },
+    {
+      "label": {
+        "text": "🎶 Jukebox Zones",
+        "color": "gold"
+      },
+      "tooltip": {
+        "text": "Switch to Jukebox Zone controls"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:jukebox"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Hub",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to main Control Hub"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:help"
+      }
+    },
+    {
+      "label": {
+        "text": "🟣 Settings",
+        "color": "light_purple"
+      },
+      "tooltip": {
+        "text": "Open system settings"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:settings"
+      }
+    }
+  ]
+}

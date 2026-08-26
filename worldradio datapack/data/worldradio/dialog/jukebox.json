@@ -1,0 +1,133 @@
+{
+  "type": "minecraft:multi_action",
+  "title": {
+    "text": "🎶 Jukebox Zones",
+    "color": "gold",
+    "bold": true
+  },
+  "body": [],
+  "columns": 2,
+  "pause": false,
+  "after_action": "close",
+  "can_close_with_escape": true,
+  "actions": [
+    {
+      "label": {
+        "text": "▶ Play Jukeboxes",
+        "color": "green",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Start playback on all stopped Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/play"
+      }
+    },
+    {
+      "label": {
+        "text": "⏹ Stop Jukeboxes",
+        "color": "red",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Stop playback on all active Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/stop"
+      }
+    },
+    {
+      "label": {
+        "text": "⏮ Previous Track",
+        "color": "dark_aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Switch to previous song in Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/prev"
+      }
+    },
+    {
+      "label": {
+        "text": "⏭ Next Track",
+        "color": "aqua",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Switch to next song in Jukebox zones"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:jukebox/control/next"
+      }
+    },
+    {
+      "label": {
+        "text": "📏 Zone Radius Slider",
+        "color": "light_purple",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Open interactive radius slider and presets"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:radius"
+      }
+    },
+    {
+      "label": {
+        "text": "ℹ System Status",
+        "color": "blue",
+        "bold": true
+      },
+      "tooltip": {
+        "text": "Print full system status in chat"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/function worldradio:radio/status"
+      }
+    },
+    {
+      "label": {
+        "text": "🔙 Back to Hub",
+        "color": "gray"
+      },
+      "tooltip": {
+        "text": "Return to main Control Hub"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:help"
+      }
+    },
+    {
+      "label": {
+        "text": "🌐 Global Radio",
+        "color": "green"
+      },
+      "tooltip": {
+        "text": "Switch to Global Radio controls"
+      },
+      "width": 150,
+      "action": {
+        "type": "run_command",
+        "command": "/dialog show @s worldradio:global"
+      }
+    }
+  ]
+}
