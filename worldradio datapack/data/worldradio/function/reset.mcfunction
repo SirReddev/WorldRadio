@@ -38,8 +38,5 @@ scoreboard players set #jukebox_shuffle worldradio.data 0
 scoreboard players set #announce_mode worldradio.data 0
 scoreboard players set #jukebox_radius worldradio.data 20
 
-# 4. Refresh zones with default radius
-function worldradio:jukebox/zones/refresh_zones
-
-# 5. Announce reset
+# 4. Announce reset
 tellraw @a [{"text":"[WorldRadio] ","color":"green","bold":true},{"text":"All playback, devices, animations, and settings have been ","color":"gray"},{"text":"RESET TO DEFAULTS","color":"gold","bold":true},{"text":".","color":"gray"}]

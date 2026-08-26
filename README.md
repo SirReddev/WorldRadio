@@ -18,10 +18,9 @@
   - [Automated Background Processes](#automated-background-processes)
 - [DJ Permission System (WorldRadioDJ Tag)](#dj-permission-system-worldradiodj-tag)
 - [In-Game Controls & Commands Reference](#in-game-controls--commands-reference)
-  - [Control Hub Dialog GUI](#control-hub-dialog-gui)
   - [3D Boombox](#3d-boombox)
   - [3D Jukebox](#3d-jukebox)
-  - [Dynamic Radius & Seamless Zone Handover](#dynamic-radius--seamless-zone-handover)
+  - [Local Jukebox Zones & Speaker Binding](#local-jukebox-zones--speaker-binding)
   - [Song Notification Modes](#song-notification-modes)
 - [System Architecture & How It Works](#system-architecture--how-it-works)
 - [NoteBlockStudio Export Guidelines](#noteblockstudio-export-guidelines)
@@ -33,13 +32,13 @@
 
 ## <img src="https://raw.githubusercontent.com/FuncFusion/mc-dp-icons/main/icons/advancement_file.svg" width="20" height="20" align="center" /> Key Features
 
-- **Multi-Speaker Global Synchronization**: Summon as many boomboxes as you want across your world—all boomboxes play music and display animations in 100% lockstep.
+- **Multi-Speaker Global Synchronization**: Summon as many boomboxes as you want across your world—all global boomboxes play music and pulse in 100% lockstep.
 - **Interactive 3D Jukeboxes with Mesh Networking**: Full Animated Java console models with clickable 3D buttons, moving needle arms, and spinning vinyl records. Nearby jukeboxes connect automatically into a synchronized mesh network.
-- **Dynamic Radius & Seamless Zone Handover**: Jukeboxes broadcast local music to boomboxes in their zone. When boomboxes enter or exit a jukebox radius, they automatically hand over between Global Radio and local jukebox channels in real-time.
+- **Dedicated Local Jukebox Zones**: Boomboxes placed in range of a Jukebox bind to that Jukebox, granting local venues complete audio autonomy isolated from Global Radio.
 - **Standalone GUI Song Manager**: Easily add, update, and remove songs using the included **`WorldRadioManager.exe`** desktop program (no coding or terminal commands required).
 - **Interactive Minecraft Dialog GUI**: Features a clean Control Panel (`/function worldradio:radio/help`) with one-click buttons, track selector, radius slider, and full system reset.
 - **DJ Role & Permission Protection**: Server-safe control system requiring the `WorldRadioDJ` entity tag to prevent unauthorized players from stopping or skipping music.
-- **Live Digital Screens**: High-contrast text displays on every boombox model dynamically show `Playing: <Song Title>`.
+- **Live Digital Screens**: High-contrast text displays dynamically show `Playing: <Song Title>` when active and clean standby dots (`......`) when idle.
 
 ---
 
@@ -120,9 +119,12 @@ All commands require the `WorldRadioDJ` tag to execute.
 |---|---|---|
 | **Control Panel (GUI)** | `/function worldradio:radio/help`<br>*(or `/dialog show @s worldradio:help`)* | Opens the official Minecraft Modal Dialog GUI with clickable buttons |
 | **Summon Boombox** | `/function worldradio:summon_boombox` | Summons an Animated Java boombox model at your location |
-| **Remove Nearest Boombox** | `/function worldradio:remove_boombox` | Removes the nearest boombox model (within 5 blocks) |
+| **Remove Nearest Boombox** | `/function worldradio:remove_boombox` | Removes the nearest single boombox (within 5 blocks) |
+| **Remove Zone Boomboxes** | `/function worldradio:remove_zone_boomboxes` | Removes all local boomboxes listening to the jukebox in your area |
+| **Remove All Boomboxes** | `/function worldradio:remove_all_boomboxes` | Removes every boombox model from the entire world |
 | **Summon Jukebox** | `/function worldradio:summon_jukebox` | Summons an interactive 3D animated Jukebox model |
 | **Remove Nearest Jukebox** | `/function worldradio:remove_jukebox` | Removes the nearest Jukebox model (within 5 blocks) |
+| **Remove All Jukeboxes** | `/function worldradio:remove_all_jukeboxes` | Removes every Jukebox model from the entire world |
 | **Global Play** | `/function worldradio:radio/play` | Starts or resumes song playback on all global boomboxes |
 | **Global Pause** | `/function worldradio:radio/pause` | Pauses global playback at current timestamp |
 | **Global Stop** | `/function worldradio:radio/stop` | Stops global playback, resets position to tick 0, clears displays |
@@ -149,9 +151,9 @@ All commands require the `WorldRadioDJ` tag to execute.
 
 Summon using `/function worldradio:summon_boombox`.
 
-* **Live LCD Screen**: Displays the current song title.
-* **Animated Speakers**: Subwoofers pulse to the music.
-* **Synchronized Playback**: Plays Global Radio or syncs with nearby Jukeboxes.
+* **Live LCD Screen**: Displays the current song title when playing, or bold white standby dots (`......`) when idle.
+* **Animated Speakers**: Subwoofers pulse and bounce in sync with the music.
+* **Smart Placement Binding**: Plays Global Radio by default, or permanently links to a local Jukebox when placed in its zone.
 
 </td>
 </tr>
@@ -170,9 +172,9 @@ Summon using `/function worldradio:summon_boombox`.
 
 Summon using `/function worldradio:summon_jukebox`.
 
-* **Interactive Buttons**: Right-click to Play, Stop, Next, or Previous.
-* **Animated Turntable**: Vinyl record player with moving needle and discs.
-* **Mesh Syncing**: Jukeboxes in range automatically link and play together.
+* **Interactive Buttons**: Right-click 3D buttons to Play, Stop, Next, or Previous.
+* **Animated Turntable**: Vinyl record player with moving needle arm and spinning discs.
+* **Mesh Syncing**: Neighboring Jukeboxes in range automatically link and spin together.
 
 </td>
 </tr>
@@ -180,12 +182,13 @@ Summon using `/function worldradio:summon_jukebox`.
 
 ---
 
-### Dynamic Radius & Seamless Zone Handover
+### Local Jukebox Zones & Speaker Binding
 
-- **Local Jukebox Broadcast**: Jukeboxes broadcast their audio exclusively to surrounding boomboxes within their configured radius (default: 20 blocks).
-- **Dynamic Handover**:
-  - **Entering a Zone**: When a boombox is inside a Jukebox's radius, it automatically silences Global Radio and tunes directly into the Jukebox's local music.
-  - **Leaving a Zone**: If the radius shrinks or the boombox is outside all Jukebox zones, it seamlessly transfers back to the server-wide Global Radio broadcast.
+- **Local Zone Autonomy**: Jukeboxes maintain complete authority over sound in their area.
+- **Placement-Bound Architecture**:
+  - **Placed near a Jukebox**: When a Boombox is placed within a Jukebox's radius (default: 20 blocks), it permanently binds to that Jukebox. It plays the local track when the Jukebox is active, and stays silenced on standby (`......`) when the Jukebox is stopped. It is completely isolated from Global Radio commands.
+  - **Placed outside**: Boomboxes placed away from Jukeboxes connect to Global Radio and respond to server-wide radio playback.
+- **Easy Reconfiguration**: To move a speaker between local and global channels, simply break it and place it down in your desired zone, or use `/function worldradio:remove_zone_boomboxes` to quickly clear all local speakers in an area.
 
 ---
 
@@ -257,6 +260,8 @@ When exporting songs from NoteBlockStudio to use with WorldRadio:
 World Radio/
 ├── assets/                       # Documentation images & banner assets
 │   ├── title.png                 # Header banner
+│   ├── boombox.png               # 3D Boombox showcase image
+│   ├── jukebox.png               # 3D Jukebox showcase image
 │   └── control_panel.png         # Control panel GUI screenshot
 ├── WorldRadioManager.exe         # Standalone GUI Playlist & Song Manager
 ├── WorldRadioManager.cs          # C# Source code for WorldRadioManager
@@ -274,11 +279,14 @@ World Radio/
 │           ├── dialog/           # Minecraft Modal Dialog GUI definitions
 │           │   └── help.json     # Control panel GUI definition
 │           └── function/
-│               ├── reset.mcfunction          # Complete system reset
+│               ├── reset.mcfunction                  # Complete system reset
 │               ├── summon_boombox.mcfunction
 │               ├── remove_boombox.mcfunction
+│               ├── remove_all_boomboxes.mcfunction   # Remove all world boomboxes
+│               ├── remove_zone_boomboxes.mcfunction  # Remove local zone speakers
 │               ├── summon_jukebox.mcfunction
 │               ├── remove_jukebox.mcfunction
+│               ├── remove_all_jukeboxes.mcfunction   # Remove all world jukeboxes
 │               ├── load.mcfunction
 │               ├── tick.mcfunction
 │               ├── jukebox/      # Local zone mesh & 3D animation controllers

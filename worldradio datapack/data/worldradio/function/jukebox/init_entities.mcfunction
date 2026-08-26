@@ -15,6 +15,3 @@ execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,tag=!wo
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,tag=!worldradio.jb_init] run scoreboard players set @s worldradio.jb_phase 0
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,tag=!worldradio.jb_init] run tag @s remove worldradio.busy
 execute as @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,tag=!worldradio.jb_init] run tag @s add worldradio.jb_init
-
-# Refresh zone mesh connection for newly initialized jukeboxes
-function worldradio:jukebox/zones/refresh_zones

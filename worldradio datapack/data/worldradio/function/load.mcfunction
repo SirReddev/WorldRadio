@@ -16,9 +16,6 @@ execute unless score #jukebox_shuffle worldradio.data matches 0..1 run scoreboar
 execute unless score #announce_mode worldradio.data matches 0..3 run scoreboard players set #announce_mode worldradio.data 0
 execute unless score #jukebox_radius worldradio.data matches 1.. run scoreboard players set #jukebox_radius worldradio.data 20
 
-# Refresh zone data
-function worldradio:jukebox/zones/refresh_zones
-
 # Set initial text on any existing boomboxes
 execute if score #state worldradio.data matches 1..2 run function worldradio:radio/songs/update_display
 execute if score #state worldradio.data matches 0 run function worldradio:radio/internal/clear_display

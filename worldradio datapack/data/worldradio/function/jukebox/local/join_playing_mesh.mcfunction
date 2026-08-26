@@ -15,5 +15,10 @@ execute if score @s worldradio.jb_song matches 2 at @s run scoreboard players op
 execute if score @s worldradio.jb_song matches 2 run tag @s add nbs_Celebrawl
 execute if score @s worldradio.jb_song matches 2 run function aj:worldradio_jukebox/animations/playing/play
 
-# 4. Set playing state
+# 4. Copy animation frame from host jukebox and sync turntable rotation
+execute at @s run scoreboard players operation @s aj.playing.frame = @e[type=minecraft:item_display,tag=aj.worldradio_jukebox.root,scores={worldradio.jb_state=1},limit=1,sort=nearest] aj.playing.frame
+execute store result storage animated_java:temp args.frame int 1 run scoreboard players get @s aj.playing.frame
+execute at @s run function aj:worldradio_jukebox/animations/playing/set_frame with storage animated_java:temp args
+
+# 5. Set playing state
 scoreboard players set @s worldradio.jb_state 1

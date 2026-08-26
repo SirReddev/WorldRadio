@@ -16,4 +16,5 @@ $execute if score @s worldradio.jb_state matches 1 if score @s worldradio.jb_son
 
 # If Jukebox is stopped:
 $execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run function aj:worldradio_boombox/animations/playing/stop
-$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {text:"",extra:[{text:"Playing: ",color:"green"},{text:"",color:"dark_green"}]}
+$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] run function aj:worldradio_boombox/animations/pause_all
+$execute if score @s worldradio.jb_state matches 0 at @s as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=worldradio.new_in_zone,distance=..$(radius)] at @s as @e[type=minecraft:text_display,tag=aj.worldradio_boombox.text_display,distance=..1] run data modify entity @s text set value {text:"......",bold:true,color:"white"}
