@@ -39,8 +39,33 @@ namespace WorldRadioManager
         private string datapackRoot;
 
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
+            if (args != null && args.Length > 0)
+            {
+                if (args[0] == "--rebuild")
+                {
+                    var form = new MainForm();
+                    var songs = form.GetInstalledSongs();
+                    form.RebuildPlaylistDispatchers(songs);
+                    Console.WriteLine("Rebuilt playlist dispatchers for " + songs.Count + " songs.");
+                    return;
+                }
+                if (args[0] == "--import-dir" && args.Length > 1)
+                {
+                    var form = new MainForm();
+                    string dir = args[1];
+                    foreach (var zip in Directory.GetFiles(dir, "*.zip"))
+                    {
+                        string title = Regex.Replace(Path.GetFileNameWithoutExtension(zip).Replace('_', ' '), @"\b[a-z]", m => m.Value.ToUpper());
+                        form.ImportSongDirect(zip, title, false);
+                    }
+                    var songs = form.GetInstalledSongs();
+                    form.RebuildPlaylistDispatchers(songs);
+                    Console.WriteLine("Imported all songs from " + dir);
+                    return;
+                }
+            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
@@ -375,7 +400,7 @@ namespace WorldRadioManager
             Log(string.Format("Loaded {0} song(s) from playlist.", songs.Count));
         }
 
-        private List<SongInfo> GetInstalledSongs()
+        public List<SongInfo> GetInstalledSongs()
         {
             List<SongInfo> list = new List<SongInfo>();
             if (string.IsNullOrEmpty(datapackRoot)) return list;
@@ -464,7 +489,7 @@ namespace WorldRadioManager
             if (File.Exists(tickFile))
             {
                 string tickText = File.ReadAllText(tickFile);
-                Match m = Regex.Match(tickText, @"tree/(\S+)");
+                Match m = Regex.Match(tickText, @"/tree/([^/\s\r\n]+)");
                 if (m.Success) rootTree = m.Groups[1].Value;
             }
         }
@@ -490,27 +515,11 @@ namespace WorldRadioManager
             return 0;
         }
 
-        private void ImportSong()
+        public bool ImportSongDirect(string source, string title, bool rebuild = true)
         {
-            string source = txtSongSource.Text.Trim();
-            string title = txtSongTitle.Text.Trim();
-
-            if (string.IsNullOrEmpty(datapackRoot) || !Directory.Exists(datapackRoot))
-            {
-                MessageBox.Show("Please select a valid 'worldradio datapack' folder first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (string.IsNullOrEmpty(source) || (!File.Exists(source) && !Directory.Exists(source)))
-            {
-                MessageBox.Show("Please select a valid song source file (.zip) or folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (string.IsNullOrEmpty(title))
-            {
-                title = Path.GetFileNameWithoutExtension(source);
-            }
-
-            Log("Starting import for: " + title);
+            if (string.IsNullOrEmpty(datapackRoot) || !Directory.Exists(datapackRoot)) return false;
+            if (string.IsNullOrEmpty(source) || (!File.Exists(source) && !Directory.Exists(source))) return false;
+            if (string.IsNullOrEmpty(title)) title = Path.GetFileNameWithoutExtension(source);
 
             try
             {
@@ -542,8 +551,7 @@ namespace WorldRadioManager
                 if (foundSongDir == null)
                 {
                     Directory.Delete(tempDir, true);
-                    MessageBox.Show("Could not locate a valid NoteBlockStudio song directory (missing load.mcfunction or notes/ folder).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    return false;
                 }
 
                 string destDir = Path.Combine(datapackRoot, "data", "worldradio", "function", "songs", songFolderName);
@@ -582,7 +590,7 @@ namespace WorldRadioManager
                 }
                 if (sanitizedCount > 0)
                 {
-                    Log(string.Format("Sanitized {0} function file(s) with invalid playsounds.", sanitizedCount));
+                    Log(string.Format("Sanitized {0} function file(s) with invalid playsounds in {1}.", sanitizedCount, songFolderName));
                 }
 
                 // Detect details
@@ -629,19 +637,53 @@ namespace WorldRadioManager
 
                 Log("Generated connector functions in: data/worldradio/function/radio/songs/" + songFolderName);
 
-                var allSongs = GetInstalledSongs();
-                RebuildPlaylistDispatchers(allSongs);
-                RefreshSongList();
-
-                txtSongSource.Clear();
-                txtSongTitle.Clear();
-
-                MessageBox.Show(string.Format("Successfully imported '{0}'!\nRun /reload in Minecraft to play.", title), "Import Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (rebuild)
+                {
+                    var allSongs = GetInstalledSongs();
+                    RebuildPlaylistDispatchers(allSongs);
+                    RefreshSongList();
+                }
+                return true;
             }
             catch (Exception ex)
             {
                 Log("ERROR during import: " + ex.Message);
-                MessageBox.Show("Import failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private void ImportSong()
+        {
+            string source = txtSongSource.Text.Trim();
+            string title = txtSongTitle.Text.Trim();
+
+            if (string.IsNullOrEmpty(datapackRoot) || !Directory.Exists(datapackRoot))
+            {
+                MessageBox.Show("Please select a valid 'worldradio datapack' folder first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(source) || (!File.Exists(source) && !Directory.Exists(source)))
+            {
+                MessageBox.Show("Please select a valid song source file (.zip) or folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(title))
+            {
+                title = Path.GetFileNameWithoutExtension(source);
+            }
+
+            Log("Starting import for: " + title);
+
+            bool ok = ImportSongDirect(source, title, true);
+            if (ok)
+            {
+                txtSongSource.Clear();
+                txtSongTitle.Clear();
+                MessageBox.Show(string.Format("Successfully imported '{0}'!\nRun /reload in Minecraft to play.", title), "Import Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Could not locate a valid NoteBlockStudio song directory (missing load.mcfunction or notes/ folder).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -831,8 +873,8 @@ namespace WorldRadioManager
                 "tellraw @a [{\"text\":\" Jukebox Zone Radius: \",\"color\":\"gray\"},{\"score\":{\"name\":\"#jukebox_radius\",\"objective\":\"worldradio.data\"},\"color\":\"gold\",\"bold\":true},{\"text\":\" blocks\",\"color\":\"gray\"}]",
                 "",
                 "# Device counts",
-                "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"light_purple\",\"bold\":true}]",
-                "tellraw @a [{\"text\":\" Active Jukeboxes: \",\"color\":\"gray\"},{\"score\":{{\"name\":\"#jukebox_count\",\"objective\":\"worldradio.data\"}},\"color\":\"gold\",\"bold\":true}]",
+                "tellraw @a [{\"text\":\" Active Boomboxes: \",\"color\":\"gray\"},{\"score\":{\"name\":\"#boombox_count\",\"objective\":\"worldradio.data\"},\"color\":\"light_purple\",\"bold\":true}]",
+                "tellraw @a [{\"text\":\" Active Jukeboxes: \",\"color\":\"gray\"},{\"score\":{\"name\":\"#jukebox_count\",\"objective\":\"worldradio.data\"},\"color\":\"gold\",\"bold\":true}]",
                 "tellraw @a [{\"text\":\"=================================\",\"color\":\"dark_green\"},\"\\n\"]"
             });
             File.WriteAllLines(Path.Combine(datapackRoot, "data", "worldradio", "function", "radio", "status.mcfunction"), statusLines);

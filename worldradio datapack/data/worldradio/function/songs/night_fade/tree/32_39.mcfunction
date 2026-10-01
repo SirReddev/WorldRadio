@@ -1,0 +1,2 @@
+execute as @s[scores={nbs_nightfade=2560..3040}] run function worldradio:songs/night_fade/tree/32_35
+execute as @s[scores={nbs_nightfade=2880..3440}] run function worldradio:songs/night_fade/tree/36_39

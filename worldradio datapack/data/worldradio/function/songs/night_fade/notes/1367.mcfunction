@@ -1,0 +1,6 @@
+execute at @s run playsound minecraft:block.note_block.harp record @a ~ ~ ~ 1 1.887749
+execute at @s run playsound minecraft:block.note_block.flute record @a ~ ~ ~ 1 0.629961
+execute at @s run playsound minecraft:block.note_block.flute record @a ~ ~ ~ 1 0.561231
+execute at @s run playsound minecraft:block.note_block.harp record @a ~ ~ ~ 1 0.840896
+execute at @s run playsound minecraft:block.note_block.cow_bell record @a ~ ~ ~ 1 0.561231
+scoreboard players set @s nbs_nightfade_t 1367

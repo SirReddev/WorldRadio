@@ -1,3 +1,9 @@
 # WorldRadio - Global Song Finish Check
-execute if score #song worldradio.data matches 1 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_steam_gardens_t matches 2470.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 1 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_batcave_t matches 2015.. run function worldradio:radio/internal/on_song_finished
 execute if score #song worldradio.data matches 2 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_Celebrawl_t matches 1311.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 3 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_creakingtr_t matches 2015.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 4 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_ghostgiggl_t matches 2847.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 5 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_gourddance_t matches 2719.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 6 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_midnightmy_t matches 2243.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 7 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_nightfade_t matches 2079.. run function worldradio:radio/internal/on_song_finished
+execute if score #song worldradio.data matches 8 as @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,limit=1] if score @s nbs_wraithsere_t matches 1823.. run function worldradio:radio/internal/on_song_finished

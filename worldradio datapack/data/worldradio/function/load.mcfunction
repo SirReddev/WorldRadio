@@ -21,4 +21,7 @@ execute unless score #jukebox_radius worldradio.data matches 1.. run scoreboard 
 execute if score #state worldradio.data matches 1..2 run function worldradio:radio/songs/update_display
 execute if score #state worldradio.data matches 0 run function worldradio:radio/internal/clear_display
 
+# Enable hand swing animation on jukebox button interactions
+execute as @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction] run data modify entity @s response set value true
+
 tellraw @a[tag=worldradio.admin] [{"text":"[WorldRadio] ","color":"green","bold":true},{"text":"Datapack loaded successfully. Type ","color":"gray"},{"text":"/function worldradio:radio/help","color":"aqua","underlined":true,"clickEvent":{"action":"suggest_command","value":"/function worldradio:radio/help"}},{"text":" for controls.","color":"gray"}]

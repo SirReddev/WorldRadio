@@ -2,7 +2,6 @@
 	"pack": {
 		"pack_format": 75,
 		"description": "WorldRadio Datapack by Reddev (https://reddev.dev)",
-		"min_format": 101,
-		"max_format": 101
+		"supported_formats": [75, 125]
 	}
 }

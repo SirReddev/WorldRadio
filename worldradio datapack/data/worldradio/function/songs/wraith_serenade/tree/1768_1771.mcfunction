@@ -1,0 +1,2 @@
+execute as @s[scores={nbs_wraithsere=141440..141760}] run function worldradio:songs/wraith_serenade/tree/1768_1769
+execute as @s[scores={nbs_wraithsere=141600..142000}] run function worldradio:songs/wraith_serenade/tree/1770_1771

@@ -1,0 +1,2 @@
+execute as @a[tag=nbs_midnightmy] run scoreboard players operation @s nbs_midnightmy += speed nbs_midnightmy
+execute as @a[tag=nbs_midnightmy] run function worldradio:songs/midnight_mystery/tree/0_4095

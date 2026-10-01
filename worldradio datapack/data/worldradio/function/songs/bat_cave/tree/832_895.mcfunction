@@ -1,0 +1,2 @@
+execute as @s[scores={nbs_batcave=66560..69280}] run function worldradio:songs/bat_cave/tree/832_863
+execute as @s[scores={nbs_batcave=69120..71920}] run function worldradio:songs/bat_cave/tree/864_895

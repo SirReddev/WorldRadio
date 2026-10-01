@@ -6,6 +6,7 @@ execute as @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction.i
 execute as @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction.interaction3,tag=!worldradio.btn_tagged] run tag @s add worldradio.btn_next
 execute as @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction.interaction4,tag=!worldradio.btn_tagged] run tag @s add worldradio.btn_prev
 
+execute as @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction,tag=!worldradio.btn_tagged] run data modify entity @s response set value true
 tag @e[type=minecraft:interaction,tag=aj.worldradio_jukebox.interaction,tag=!worldradio.btn_tagged] add worldradio.btn_tagged
 
 # Initialize new Jukebox Root Entities

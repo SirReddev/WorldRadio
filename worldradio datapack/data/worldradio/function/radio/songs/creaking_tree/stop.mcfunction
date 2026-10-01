@@ -1,0 +1,8 @@
+# Song: Creaking Tree - Stop
+tag @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone,tag=nbs_creakingtr] remove nbs_creakingtr
+scoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] nbs_creakingtr
+scoreboard players reset @e[type=minecraft:item_display,tag=aj.worldradio_boombox.root,tag=!worldradio.local_zone] nbs_creakingtr_t
+
+scoreboard players reset #radio nbs_creakingtr
+scoreboard players reset #radio nbs_creakingtr_t
+scoreboard players set #radio_has_song worldradio.data 0
